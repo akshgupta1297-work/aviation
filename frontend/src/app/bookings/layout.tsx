@@ -2,11 +2,11 @@ import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 
 export const metadata = {
-  title: "Dashboard | Sky",
-  description: "Overview of flights, ticket sales, revenue, and bookings",
+  title: "Bookings | Sky",
+  description: "Overview of Bookings of flights ticket sales",
 };
 
-export default function DashboardLayout({
+export default function BookingLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ export default function DashboardLayout({
     <div className="flex h-screen overflow-auto">
       <Sidebar />
       <div className="flex-1">
-        <Header />
+        <Header title="Bookings" />
         <main className="max-h-screen overflow-auto">{children}</main>
       </div>
     </div>
