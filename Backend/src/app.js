@@ -6,7 +6,7 @@ const cors = require("cors");
 const path = require("path");
 const dotenv = require("dotenv");
 const routes = require("./routes");
-// const logger = require("./src/config/logger");
+const logger = require("./config/logger");
 // const fs = require("fs");
 dotenv.config();
 
@@ -24,13 +24,13 @@ mongoose.connect(process.env.MONGODB_CONNECTION_URL, {
 });
 
 mongoose.connection.on("error", (error) => {
-  console.log("connection failed");
-  //   logger.error("connection failed");
+  console.log("connection failed", error);
+    logger.error("connection failed");
 });
 
 mongoose.connection.on("connected", (connected) => {
-  console.log("connected with data base....");
-  //   logger.info("connected with data base");
+  console.log("connected with data base....", connected);
+    logger.info("connected with data base");
 });
 
 // Use your API routes

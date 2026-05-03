@@ -65,7 +65,38 @@ const login = async (email, password) => {
 
     admin.password = undefined;
     return {
-      admin,
+      user:admin,
+      token,
+    };
+  } catch (error) {
+    logger.info(`login => admin service has error ::> ${error.message}`);
+    console.error("login => admin service has error ::> ", error.message);
+    throw new ApiError(httpStatus.status.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+const getAdmin = async (email, id) => {
+    console.log(email,id,"adminbody??????");
+  try {
+    logger.info("logIn API called");
+    const admin = await Admin.findOne({ email: email, adminId: id });
+    if (!admin) {
+      logger.info("admin does not exist");
+      throw new ApiError(httpStatus.status.BAD_REQUEST, "admin does not exist");
+    }
+
+    if (!admin) {
+      logger.error("LogIn Failed! Incorrect email or password");
+      throw new ApiError(
+        httpStatus.status.UNAUTHORIZED,
+        "LogIn Failed! Incorrect email or password"
+      );
+    }
+
+    const token = jwtEncode(admin.adminId, admin.email, admin.userType);
+
+    admin.password = undefined;
+    return {
+      user:admin,
       token,
     };
   } catch (error) {
@@ -78,4 +109,5 @@ const login = async (email, password) => {
 module.exports = {
   createAdmin,
   login,
+  getAdmin
 };

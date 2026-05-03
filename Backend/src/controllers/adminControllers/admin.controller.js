@@ -51,8 +51,31 @@ const login = catchAsync(async (req, res) => {
       .send(errorResponse(error.statusCode, error.message));
   }
 });
+const getAdmin = catchAsync(async (req, res) => {
+  try {
+    logger.info("logIn API called");
+    const { id, email } = req;
+    const admin = await adminService.getAdmin(email, id);
+    logger.info("admin logIn successfully");
+    res
+      .status(httpStatus.status.OK)
+      .send(
+        successResponseGenerator(
+          httpStatus.status.OK,
+          "admin logIn successfully",
+          admin
+        )
+      );
+  } catch (error) {
+    logger.error(`admin logIn has error ${error.message}`);
+    res
+      .status(error.statusCode)
+      .send(errorResponse(error.statusCode, error.message));
+  }
+});
 
 module.exports = {
   createAdmin,
   login,
+  getAdmin,
 };
