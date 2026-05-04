@@ -20,7 +20,7 @@ export default function Sidebar() {
     <aside className="w-64 bg-white p-4 shadow sticky top-0">
 
       <div className="flex flex-col items-center">
-        <Image src={Logo} alt="Logo" width={150} />
+        <Image src={Logo} alt="Logo" width={150} priority fetchPriority="high" />
 
         <nav className="mt-12 gap-2 flex flex-col">
           <Link href={"/dashboard"}>

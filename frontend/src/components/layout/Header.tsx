@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { Avatar, Badge, Button, Dropdown, Separator } from "@heroui/react";
+import { useEffect, useState } from "react";
+import { Avatar, Dropdown, Separator } from "@heroui/react";
+import { logoutUser, restoreSession } from "@/lib/services/api";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useRouter } from "next/navigation";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface HeaderProps {
   title?: string;
-  userName?: string;
-  userEmail?: string;
-  userRole?: string;
-  userAvatar?: string;
   notificationCount?: number;
 }
 
@@ -79,14 +78,32 @@ function IconBtn({ children, onClick }: { children: React.ReactNode; onClick?: (
 
 export default function Header({
   title = "Dashboard",
-  userName = "Aksh G",
-  userEmail = "aksh@example.com",
-  userRole = "Admin",
-  userAvatar = "https://lh3.googleusercontent.com/a/ACg8ocJDAV4m5yXVOc12JUoS8cqP7M8437cF-Lh0-Qc8XI_EU6VxQIJycw=s83-c-mo",
   notificationCount = 3,
 }: HeaderProps) {
+  const dispatch = useAppDispatch();
+  const router = useRouter()
+
+  const user = useAppSelector((state) => state.user.user);
+  const userName = user?.name ?? "Guest";
+  const userRole = user?.role ?? "";
+  const userEmail = user?.email ?? "";
+  const userAvatar = user?.avatar;
+
+
   const [search, setSearch] = useState("");
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    restoreSession(dispatch)
+  }, [])
+
+  const logOut = () => {
+    router.push("/")
+
+    setTimeout(() => {
+      logoutUser(dispatch)
+    }, 500);
+  }
+
 
   return (
     <header className="w-full bg-white border-b border-gray-100 px-6 py-3">
@@ -207,7 +224,8 @@ export default function Header({
                   Settings
                 </Dropdown.Item> */}
                 <Separator className="my-1 border-t border-gray-100" />
-                <Dropdown.Item className="flex items-center gap-2 px-3 py-2 text-sm text-red-500 rounded-lg hover:bg-red-50 cursor-pointer">
+                <Dropdown.Item onClick={() => logOut()}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-red-500 rounded-lg hover:bg-red-50 cursor-pointer">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                       d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1" />
