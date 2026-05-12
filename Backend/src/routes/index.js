@@ -2,11 +2,14 @@ const express = require("express");
 const logger = require("../config/logger");
 const app = express();
 
-const adminRoutes = require("../routes/adminRoutes/adminRoutes");
+const adminRoutes = require("./adminRoutes/adminRoutes");
+const airportsRoutes = require("./airportRoutes/airportRoutes");
 
 
 // Admin Routes
 app.use("/admin", adminRoutes);
+// Flight Routes
+app.use("/airport", airportsRoutes);
 
 
 
