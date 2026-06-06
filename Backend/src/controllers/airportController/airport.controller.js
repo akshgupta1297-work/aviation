@@ -7,6 +7,7 @@ const {
 const logger = require("../../config/logger");
 
 const airportsService = require("../../services/airportService/airport.service");
+const { getLocationData } = require("../../config/geoLocation");
 
 
 
@@ -38,7 +39,41 @@ const insertAirportsController = catchAsync(async (req, res) => {
             .send(errorResponse(error.statusCode, error.message));
     }
 });
+const getAirportsController = catchAsync(async (req, res) => {
+    try {
+        logger.info("Get airports API called");
+
+        const query = req.query
+        const locationData = {};
+
+        const result = await airportsService.getAirportsService(query, locationData);
+
+        // console.log(result);
+
+
+        logger.info("Airports get successfully");
+        const resultData = {
+            airports: result,
+            count: result.length
+        }
+        res
+            .status(httpStatus.status.OK)
+            .send(
+                successResponseGenerator(
+                    httpStatus.status.OK,
+                    "Airports get successfully",
+                    resultData
+                )
+            );
+    } catch (error) {
+        logger.error(`Airport get Error: ${error.message}`);
+        res
+            .status(error.statusCode)
+            .send(errorResponse(error.statusCode, error.message));
+    }
+});
 
 module.exports = {
     insertAirportsController,
+    getAirportsController
 };

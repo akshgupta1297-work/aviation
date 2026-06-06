@@ -30,3 +30,44 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.autocomplete .autocomplete__trigger {
+  padding: 0px !important;
+  align-items: center;
+  min-width: 90%;
+  max-width: 100%;
+}
+
+.autocomplete .autocomplete__trigger .search-airport-name {
+  display: none;
+}
+
+.autocomplete .autocomplete__trigger .display-airport-name {
+  display: block !important;
+}
+
+.autocomplete .autocomplete__trigger div {
+  padding: 0px !important;
+}
+
+.autocomplete .autocomplete__trigger .single-line-trim {
+  color: green;
+  white-space: nowrap;
+  /* Keeps text on one line */
+  overflow: hidden;
+  /* Hides the text that overflows */
+  text-overflow: ellipsis;
+  /* Adds the '...' */
+  width: 215px;
+  /* max-width: 100%; */
+}
+
+.tabs__list-container .tabs__tab .tabs__indicator {
+  background: #fbbf24 !important;
+}
+
+.custom-datepicker:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  /* border: solid 2px #a855f7 !important;  */
+}

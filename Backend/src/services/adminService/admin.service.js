@@ -6,7 +6,7 @@ const Admin = require("../../models/admin.model");
 const { jwtEncode } = require("../../middlewares/authorization");
 // const bcrypt = require("bcryptjs");
 
-const createAdmin = async (adminBody) => {
+const createAdmin = async (adminBody, deviceData, locationData) => {
 
 
   try {
@@ -27,6 +27,13 @@ const createAdmin = async (adminBody) => {
       logger.error("Something went wrong");
       throw new ApiError(httpStatus.status.UNAUTHORIZED, "Something went wrong");
     }
+    await emailService.accountCreationEmailHTML("Account Creation",
+      admin.email,
+      admin.firstName,
+      admin.userType,
+      deviceData,
+      locationData
+    );
     return admin;
   } catch (error) {
     logger.error(`createAdmin => admin service has error ::> ${error.message}`);
@@ -36,7 +43,6 @@ const createAdmin = async (adminBody) => {
 };
 
 const login = async (email, password, deviceData, locationData) => {
-  // console.log(email, password, "adminbody??????");
   try {
     logger.info("logIn API called");
     const admin = await Admin.findOne({ email: email });
@@ -66,14 +72,14 @@ const login = async (email, password, deviceData, locationData) => {
 
     admin.password = undefined;
 
-    await emailService.accountLoginEmail(
-      "Aviation App - Account Login",
-      admin.email,
-      admin.firstName,
-      admin.userType,
-      deviceData,
-      locationData
-    );
+    // await emailService.accountLoginEmail(
+    //   "Aviation App - Account Login",
+    //   admin.email,
+    //   admin.firstName,
+    //   admin.userType,
+    //   deviceData,
+    //   locationData
+    // );
     return {
       user: admin,
       token,
@@ -85,7 +91,6 @@ const login = async (email, password, deviceData, locationData) => {
   }
 };
 const getAdmin = async (email, id) => {
-  console.log(email, id, "adminbody??????");
   try {
     logger.info("logIn API called");
     const admin = await Admin.findOne({ email: email, adminId: id });

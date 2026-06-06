@@ -1,34 +1,34 @@
-"use client";
 
-import { useAppDispatch } from "@/lib/hooks";
-import { loginUser } from "@/lib/services/api";
-import { Button } from "@heroui/react";
+import Header from "@/components/common/Header";
+import FlightSearch from "@/components/home/FlightSearch";
+import HeroCarousel from "@/components/home/HeroCarousel";
+import PromoCards from "@/components/home/PromoCards";
+import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-
-export default function Home() {
-  const dispatch = useAppDispatch();
-  const router = useRouter()
-
-  const userLogin = async () => {
-    const login = await loginUser(dispatch, { email: "work.akshgupta@gmail.com", password: "Aksh1326@" })
-    console.log(login);
-    if (login.isLogin) {
-      router.push("/dashboard")
-    }
-
-  }
-
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans">
-      Home
+    <main className="bg-gray-100 min-h-screen pb-20">
+      <div className="relative">
+        <Header />
+        <HeroCarousel />
 
-      <Button onClick={() => userLogin()} className={"bg-amber-400"}>
-        Login
-      </Button>
+        <div className="px-4 lg:px-10">
+          <FlightSearch />
 
-      <Link href={"/dashboard"}>Dashboard</Link>
-    </div>
+          <PromoCards />
+        </div>
+        <Image width={400} height={600} className="w-full h-full"
+          src="https://www.goindigo.in/content/dam/s6web/in/en/assets/static-pages/aircraft-and-fleet/ATR_Aircraft-78Y.png" alt="IndiGo Airbus A320neo aircraft seat map  A320neo V.2" loading="lazy" />
+        <Image width={400} height={600} className="w-full h-full"
+          src="https://www.goindigo.in/content/dam/s6web/in/en/assets/static-pages/aircraft-and-fleet/A320-NEO-186Y.svg" alt="IndiGo Airbus A320neo aircraft seat map  A320neo V.2" loading="lazy" />
+        <Image width={400} height={400} className="w-full h-full"
+          src="https://www.goindigo.in/content/dam/s6web/in/en/assets/static-pages/aircraft-and-fleet/Norse-787.svg" alt="IndiGo Airbus A320neo aircraft seat map  A320neo V.2" loading="lazy" />
+
+        <iframe id="seat-map-iframe" title="Seat map" className="w-1/2 h-screen" data-uid="f7ae58c7f1a1cc4abe9273a0f971ba2a"
+          src="https://seatmaps.com/seatmaps/f7ae58c7f1a1cc4abe9273a0f971ba2a.html?seatbar=hide&amp;tooltip_on_hover=true">
+        </iframe>
+      </div>
+    </main>
   );
 }

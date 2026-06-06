@@ -35,4 +35,8 @@ module.exports = {
     },
     from: envVars.EMAIL_FROM,
   },
+  paymentLinks: {
+    stripeSecretKey: envVars.STRIPE_SECRET_KEY,
+    stripeWebhookSecret: envVars.STRIPE_WEBHOOK_SECRET,
+  },
 };

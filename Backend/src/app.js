@@ -1,14 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
 const { errorConverter, errorHandler } = require("./middlewares/error");
 const cors = require("cors");
 const path = require("path");
-const dotenv = require("dotenv");
+dotenv.config();
 const routes = require("./routes");
 const logger = require("./config/logger");
 // const fs = require("fs");
-dotenv.config();
+
 
 const app = express();
 app.use(cors());

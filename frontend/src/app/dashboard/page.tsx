@@ -1,7 +1,7 @@
 
 "use client"
-import PaymentHistoryTable from "@/components/dashboard/Paymenthistorytable";
-import SkytixDashboard from "@/components/dashboard/SkytixCharts";
+import PaymentHistoryTable from "@/components/admin/admin-dashboard/Paymenthistorytable";
+import SkytixDashboard from "@/components/admin/admin-dashboard/SkytixCharts";
 import { useEffect, useState } from "react";
 
 
@@ -17,7 +17,7 @@ export default function DashboardPage() {
   return (
     <>
       <div>
-        <SkytixDashboard />
+        {/* <SkytixDashboard /> */}
         <PaymentHistoryTable />
       </div>
     </>

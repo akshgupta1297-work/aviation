@@ -17,4 +17,4 @@ export const DARK = "#222222";
 export const DARK2 = "#2B2B2B";
 export const GRAY = "#6B6B6B";
 export const WHITE_1 = "#F5F5F0";
-export const AIRLINE_COLORS = [GOLD, "#1A1A1A", "#4A4A4A", "#9CA3AF"];
+export const AIRLINE_COLORS = [GOLD, Green_30, Green_20, "#4A4A4A", "#9CA3AF"];

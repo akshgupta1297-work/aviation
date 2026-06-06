@@ -12,7 +12,18 @@ const { getLocationData } = require("../../config/geoLocation");
 const createAdmin = catchAsync(async (req, res) => {
   try {
     logger.info("create admin API called");
-    const admin = await adminService.createAdmin(req.body);
+    const uaString = req.headers['user-agent'];
+
+    const parser = new UAParser(uaString);
+    const deviceData = parser.getResult();
+    // WAIT here
+    const locationData = await getLocationData();
+
+    console.log(deviceData.browser.name); // e.g., Chrome
+    console.log(deviceData.os.name);      // e.g., Windows
+    console.log(deviceData.device.model);  // e.g., iPhone
+    console.log(locationData);
+    const admin = await adminService.createAdmin(req.body, deviceData, locationData);
     logger.info("admin created successfully");
     res
       .status(httpStatus.status.OK)
