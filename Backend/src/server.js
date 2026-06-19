@@ -9,7 +9,7 @@ const cron = require("node-cron");
 const { generateFlightInstancesService } = require("./services/flightInstanceService/flightInstance.service");
 const { cancelUnpaidBookings } = require("./services/bookingService/booking.service");
 
-// Schedule cron job to run every day at 02:00 AM
+// Schedule cron job to run every day at 02:00 PM
 cron.schedule("0 14 * * *", async () => {
   logger.info("Running daily cron job for generating flight instances...");
   try {

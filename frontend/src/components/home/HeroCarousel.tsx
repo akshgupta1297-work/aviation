@@ -6,12 +6,20 @@ import { useEffect, useState } from "react";
 import Plan1 from "../../assets/images/Plan-1.png";
 import Plan2 from "../../assets/images/Paln-2.png";
 import Plan3 from "../../assets/images/Plan-3.png";
+import Plan4 from "../../assets/images/Plan-4.png";
+import Plan5 from "../../assets/images/Plan-5.png";
+import Plan6 from "../../assets/images/Plan-6.png";
+import Plan7 from "../../assets/images/landing-plan.png";
 
 const images = [
-    Plan1,
-    Plan3,
+    Plan7,
     Plan2,
-    "https://rukminim2.flixcart.com/www/2000/2000/promos/06/01/2021/276bd352-f8b3-49cf-87e9-c853e6dbd5ac.jpg?q=50",
+    Plan5,
+    Plan1,
+    Plan6,
+    Plan3,
+    Plan4,
+    // "https://rukminim2.flixcart.com/www/2000/2000/promos/06/01/2021/276bd352-f8b3-49cf-87e9-c853e6dbd5ac.jpg?q=50",
 ];
 
 const HeroCarousel = () => {
@@ -57,7 +65,7 @@ const HeroCarousel = () => {
 
             {/* CONTENT */}
             <div className="absolute inset-0 flex pt-16 justify-center z-20">
-                <h1 className="text-amber-200 text-5xl font-bold drop-shadow-lg">
+                <h1 className="text-amber-200/70 text-5xl font-bold drop-shadow-lg">
                     Get. Set. Travel.
                 </h1>
             </div>

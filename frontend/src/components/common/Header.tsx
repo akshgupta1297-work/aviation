@@ -11,6 +11,7 @@ import Logo from "../../assets/images/Logo.svg";
 import Link from 'next/link';
 import { MdEmail } from 'react-icons/md';
 import { PiPhone } from 'react-icons/pi';
+import { FaRegCalendarCheck, FaRegUser } from 'react-icons/fa';
 
 const Header = () => {
     const router = useRouter()
@@ -105,7 +106,7 @@ const Header = () => {
                                     {/* Name + role */}
                                     <div className="hidden lg:flex flex-col items-start leading-tight">
                                         <span className="text-sm font-semibold text-gray-900">{userName}</span>
-                                        <span className="text-xs text-gray-400">{userRole}</span>
+                                        <span className="text-xs text-gray-700">{userRole}</span>
                                     </div>
                                     <ChevronDownIcon />
                                 </div>
@@ -133,12 +134,17 @@ const Header = () => {
                                     </div>
                                 </div>
                                 <Dropdown.Menu>
-                                    <Dropdown.Item className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                                d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
-                                        </svg>
-                                        Profile
+                                    <Dropdown.Item>
+                                        <Link href="#" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg cursor-pointer">
+                                            <FaRegUser />
+                                            Profile
+                                        </Link>
+                                    </Dropdown.Item>
+                                    <Dropdown.Item>
+                                        <Link href="/user-bookings" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg cursor-pointer">
+                                            <FaRegCalendarCheck />
+                                            Bookings
+                                        </Link>
                                     </Dropdown.Item>
                                     <Separator className="my-1 border-t border-gray-100" />
                                     <Dropdown.Item onClick={() => logOut()}

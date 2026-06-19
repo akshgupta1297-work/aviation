@@ -50,6 +50,39 @@ function clearToken() {
 // ─── Auth API ─────────────────────────────────────────────────────────────────
 
 // Call this from your login page. It dispatches to Redux automatically.
+export async function loginAdmin(
+    dispatch: AppDispatch,
+    payload: LoginPayload
+): Promise<{ isLogin: boolean }> {
+    dispatch(loginStart());
+
+    try {
+        const responce = await apiFetch<LoginResponse>("/admin/login", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        });
+
+        const data = responce.data
+
+        // Store token in localStorage for persistence across refreshes
+        saveToken(data.token)
+
+        // Dispatch user data into Redux store
+        dispatch(
+            loginSuccess({
+                name: `${data.user.firstName} ${data.user.lastName}`,
+                email: data.user.email,
+                role: data.user.role,
+                avatar: data.user.avatar,
+                token: data.token,
+            })
+        );
+        return { isLogin: true }
+    } catch (error) {
+        dispatch(loginFailure((error as Error).message));
+        return { isLogin: false }
+    }
+}
 export async function loginUser(
     dispatch: AppDispatch,
     payload: LoginPayload
@@ -211,6 +244,12 @@ export async function confirmPaymentBackend(token: string, paymentIntentId: stri
 }
 export async function getBookingsByUserId(token: string) {
     return apiFetch<any>("/booking/get-bookings-by-user-id", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+    });
+}
+export async function getBookingDetailsByBookingId(token: string, bookingId: string) {
+    return apiFetch<any>(`/booking/get-booking-details/${bookingId}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
     });

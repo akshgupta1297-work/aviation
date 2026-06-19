@@ -77,22 +77,61 @@ const confirmBooking = async (bookingId) => {
 };
 
 const getBookingsByUserId = async (userId) => {
-  const upcomingBooking = await Booking.find({ userId: userId, paymentStatus: "PAID", journeyDate: { $gt: new Date(Date.now() + 34 * 60 * 60 * 1000) } }).lean();
+  const upcomingBooking = await Booking.find({
+    userId: userId,
+    paymentStatus: "PAID",
+    journeyDate: { $gt: new Date(Date.now()) }
+  })
+    .sort({ createdAt: -1 })
+    .lean();
+  // const myflightInstance = await FlightInstance.find({
+  //   flightInstanceId: { $in: upcomingBooking[0].flightInstanceIds }
+  // })
+  //   .sort({ createdAt: -1 })
+  //   .lean();
+  // console.log(myflightInstance);
+
   const pastBookings = await Booking.find({
     userId,
     paymentStatus: "PAID",
     bookingStatus: { $ne: "CANCELLED" },
-    journeyDate: { $lt: new Date(Date.now() + 34 * 60 * 60 * 1000) }
-  }).lean();
+    journeyDate: { $lt: new Date(Date.now()) }
+  })
+    .sort({ journeyDate: -1 })
+    .lean();
   const cancelledBookings = await Booking.find({
     userId,
     bookingStatus: "CANCELLED"
-  }).lean();
+  })
+    .sort({ createdAt: -1 })
+    .lean();
   const bookings = { upcomingBooking, pastBookings, cancelledBookings }
   if (!bookings) {
     throw new Error("Booking not found");
   }
   return bookings;
+}
+const getBookingDetailsByBookingId = async (userId, bookingId) => {
+  const booking = await Booking.findOne({
+    userId: userId,
+    bookingId: bookingId,
+  })
+    .sort({ createdAt: -1 })
+    .lean();
+  const myflightInstance = await FlightInstance.find({
+    flightInstanceId: { $in: booking.flightInstanceIds }
+  })
+    .sort({ createdAt: -1 })
+    .lean();
+  console.log(myflightInstance, "myflightInstance");
+
+
+
+  if (!booking) {
+    throw new Error("Booking not found");
+  }
+  const bookingDetails = { ...booking, myflightInstance };
+  return bookingDetails;
 }
 
 const cancelUnpaidBookings = async () => {
@@ -129,5 +168,6 @@ module.exports = {
   createBooking,
   confirmBooking,
   getBookingsByUserId,
+  getBookingDetailsByBookingId,
   cancelUnpaidBookings,
 };

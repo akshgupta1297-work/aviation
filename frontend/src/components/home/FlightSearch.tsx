@@ -102,6 +102,7 @@ const FlightSearch = () => {
                             }}
                             dateFormat={"eee, dd MMM yy"}
                             selectsStart
+                            minDate={new Date()}
                             startDate={departDate}
                             endDate={returnDate}
                         />

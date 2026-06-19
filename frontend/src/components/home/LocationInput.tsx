@@ -33,6 +33,7 @@ export default LocationInput
 
 import { getAirportsQuery } from "@/lib/services/api";
 import { Airport } from "@/lib/store/features/airport/airportSlice";
+import { debounce } from "@/utils/functions";
 import type { Key } from "@heroui/react";
 
 import {
@@ -45,7 +46,7 @@ import {
     Separator,
     useFilter,
 } from "@heroui/react";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 
 export const WithSections = memo(function WithSections({
     label,
@@ -61,6 +62,14 @@ export const WithSections = memo(function WithSections({
         onChange(val as string)
         setSelectedKey(val)
     }
+
+    const debouncedFetch = useMemo(
+        () =>
+            debounce((query: string) => {
+                getAirportsWithQuery(query)
+            }, 500),
+        [] // Empty dependency array ensures this function persists across renders
+    );
 
     useEffect(() => {
         getAirports()
@@ -90,7 +99,9 @@ export const WithSections = memo(function WithSections({
             }
         }
     }
-
+    const handleChange = (value: string) => {
+        debouncedFetch(value);       // Triggers the delayed API execution
+    };
 
     return (
         <Autocomplete
@@ -113,7 +124,7 @@ export const WithSections = memo(function WithSections({
                         <SearchField aria-label="search" autoFocus name="search" variant="secondary">
                             <SearchField.Group>
                                 <SearchField.SearchIcon />
-                                <SearchField.Input onChange={(e) => getAirportsWithQuery(e.target.value)} placeholder="Search airport..." />
+                                <SearchField.Input onChange={(e) => handleChange(e.target.value)} placeholder="Search airport..." />
                                 <SearchField.ClearButton />
                             </SearchField.Group>
                         </SearchField>

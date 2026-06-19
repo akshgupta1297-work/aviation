@@ -26,6 +26,16 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        number: {
+            type: String,
+            required: [true, "number is required"],
+            unique: [true, "Phone No. is already present"],
+            validator(value) {
+                if (!validator.isMobilePhone(value)) {
+                    throw new Error("Phone No. is inValid");
+                }
+            },
+        },
         email: {
             type: String,
             required: [true, "email is required"],

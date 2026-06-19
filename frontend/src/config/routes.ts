@@ -7,4 +7,4 @@ export const PRIVATE_ROUTES = ["/admin-dashboard", "/bookings", "/flights", "/pa
 export const AUTH_ROUTES = ["/", "/login", "/register", "/forgot-password"];
 
 export const DEFAULT_LOGIN_REDIRECT = "/login";       // where to send unauthenticated users
-export const DEFAULT_AUTHED_REDIRECT = "/admin-dashboard";  // where to send already-logged-in users
+export const DEFAULT_AUTHED_REDIRECT = "/";  // where to send already-logged-in users

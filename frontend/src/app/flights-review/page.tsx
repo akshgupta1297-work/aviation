@@ -36,7 +36,7 @@ const STEPS_ARR = [
     "payment",
 ];
 
-function SearchContent() {
+function FlightsReviewContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
@@ -110,8 +110,8 @@ function SearchContent() {
                                 <div className="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">✓</div>
                                 <h1 className="text-2xl font-bold text-gray-800 mb-2">Booking Confirmed!</h1>
                                 <p className="text-gray-500 mb-6">Your payment was successful and your flight has been booked.</p>
-                                <Button className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-2 font-medium" onClick={() => window.location.href = "/"}>
-                                    Return to Home
+                                <Button className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-2 font-medium" onClick={() => window.location.href = "/user-bookings"}>
+                                    Go to Bookings
                                 </Button>
                             </Card>
                         ) : steps !== STEPS_TYPES.PAYMENT ? <div>
@@ -326,7 +326,7 @@ export default function FlightsReviewPage() {
         <div className="bg-gray-100 min-h-screen flex flex-col">
             {/* <Header /> */}
             <Suspense fallback={<div className="p-8 text-center">Loading search parameters...</div>}>
-                <SearchContent />
+                <FlightsReviewContent />
             </Suspense>
         </div>
     );

@@ -21,7 +21,7 @@ const SORT_TYPES = {
     DURATION_DESC: "duration-desc",
 };
 
-function SearchContent() {
+function FlightsSearchContent() {
     const searchParams = useSearchParams();
 
     const from = searchParams.get("from") || "";
@@ -310,7 +310,7 @@ export default function FlightsSearchPage() {
         <div className="bg-gray-100 min-h-screen flex flex-col">
             <Header />
             <Suspense fallback={<div className="p-8 text-center">Loading search parameters...</div>}>
-                <SearchContent />
+                <FlightsSearchContent />
             </Suspense>
         </div>
     );

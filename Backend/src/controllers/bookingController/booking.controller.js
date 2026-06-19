@@ -8,6 +8,12 @@ const getBookingsByUserId = catchAsync(async (req, res) => {
     const bookings = await bookingService.getBookingsByUserId(req.id);
     res.status(httpStatus.status.OK).send(successResponseGenerator(httpStatus.status.OK, "Bookings fetched successfully", bookings));
 })
+const getBookingDetailsByBookingId = catchAsync(async (req, res) => {
+    const { bookingId } = req.params;
+    const booking = await bookingService.getBookingDetailsByBookingId(req.id, bookingId);
+    res.status(httpStatus.status.OK).send(successResponseGenerator(httpStatus.status.OK, "Booking details fetched successfully", booking));
+})
 module.exports = {
-    getBookingsByUserId
+    getBookingsByUserId,
+    getBookingDetailsByBookingId
 }

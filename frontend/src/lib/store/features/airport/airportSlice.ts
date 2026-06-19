@@ -40,7 +40,7 @@ const initialState: AirportState = {
 // ─── Slice ────────────────────────────────────────────────────────────────────
 
 const airportSlice = createSlice({
-    name: "auth",
+    name: "airport",
     initialState,
     reducers: {
         // Called when airportQuery API succeeds

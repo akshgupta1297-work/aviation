@@ -2,16 +2,18 @@
 
 import Card from '@/components/common/Card'
 import Header from '@/components/common/Header'
+import BookingOverview from '@/components/FlightBooking/BookingOverview'
 import { useAppSelector } from '@/lib/hooks'
 import { getBookingsByUserId } from '@/lib/services/api'
 import { Tabs } from '@heroui/react'
-import { format, formatRelative } from 'date-fns'
-import React, { Suspense, useEffect, useState } from 'react'
-import { CiCalendar, CiUser } from 'react-icons/ci'
-import { FaArrowRightLong } from 'react-icons/fa6'
-import { GiCommercialAirplane } from 'react-icons/gi'
+import Link from 'next/link'
+import { Suspense, useEffect, useRef, useState } from 'react'
 
-const SearchContent = () => {
+const BookingContent = () => {
+    const renderCount = useRef(0);
+    renderCount.current += 1;
+    console.log(renderCount.current);
+
     const [isLoading, setIsLoading] = useState(false)
     const [bookings, setBookings] = useState<{ upcomingBooking: [], pastBookings: [], cancelledBookings: [] }>({
         upcomingBooking: [],
@@ -45,107 +47,76 @@ const SearchContent = () => {
 
                 <div className='font-bold text-2xl pb-3'>Bookings</div>
 
-                <Tabs className="w-full">
-                    <Tabs.ListContainer className='max-w-md w-full'>
-                        <Tabs.List
-                            className='*:data-[selected=true]:text-amber-800 *:data-[selected=true]:font-extrabold bg-amber-100'
-                            aria-label="Options">
-                            <Tabs.Tab className='text-black' id="upcomming">
-                                Upcomming
-                                <Tabs.Indicator />
-                            </Tabs.Tab>
-                            <Tabs.Tab className='text-black' id="completed">
-                                Completed
-                                <Tabs.Indicator />
-                            </Tabs.Tab>
-                            <Tabs.Tab className='text-black' id="cancelled">
-                                Cancelled
-                                <Tabs.Indicator />
-                            </Tabs.Tab>
-                        </Tabs.List>
-                    </Tabs.ListContainer>
-                    <Tabs.Panel className="pt-4 w-full" id="upcomming">
-                        {bookings?.upcomingBooking?.length > 0 ?
-                            bookings?.upcomingBooking.map((booking: any) => {
-                                const totalPassengers = booking.passengers.adults.length + booking.passengers.children.length + booking.passengers.infants.length;
-                                return (
-                                    <Card key={booking.bookingId} className='w-full my-4'>
-                                        <div className='flex justify-between items-center'>
-                                            <div className='border-2 border-amber-300 p-4 rounded-full'>
-                                                <GiCommercialAirplane className='text-amber-700' size={40} />
-                                            </div>
-                                            <div className='flex gap-2 justify-center items-center'>
-                                                {booking?.sourceFrom ? booking?.sourceFrom : "Indore (IND)"} <FaArrowRightLong /> {booking?.destinationTo ? booking?.destinationTo : "Mumbai (BOM)"}
-                                            </div>
-                                            <div className='flex gap-2 justify-center items-center'>
-                                                <CiCalendar /> {format(new Date(booking?.journeyDate), "PPP")} <CiUser /> {booking.passengers.adults[0].firstName} {totalPassengers > 1 ? " + " + (totalPassengers - 1) + " more" : ""}
-                                            </div>
-                                            <div className='w-1/3 min-w-1/3'>Trip On {formatRelative(new Date(booking?.journeyDate), new Date())}</div>
-                                        </div>
-                                    </Card>
-                                )
-                            })
-                            :
-                            <Card>
-                                <p>No upcoming bookings</p>
-                            </Card>
-                        }
-                    </Tabs.Panel>
-                    <Tabs.Panel className="pt-4" id="completed">
-                        {bookings?.pastBookings?.length > 0 ?
-                            bookings?.pastBookings.map((booking: any) => {
-                                const totalPassengers = booking.passengers.adults.length + booking.passengers.children.length + booking.passengers.infants.length;
-                                return (
-                                    <Card key={booking.bookingId} className='w-full my-4'>
-                                        <div className='flex justify-between items-center'>
-                                            <div className='border-2 border-amber-300 p-4 rounded-full'>
-                                                <GiCommercialAirplane className='text-amber-700' size={40} />
-                                            </div>
-                                            <div className='flex gap-2 justify-center items-center'>
-                                                {booking?.sourceFrom ? booking?.sourceFrom : "Indore (IND)"} <FaArrowRightLong /> {booking?.destinationTo ? booking?.destinationTo : "Mumbai (BOM)"}
-                                            </div>
-                                            <div className='flex gap-2 justify-center items-center'>
-                                                <CiCalendar /> {format(new Date(booking?.journeyDate), "PPP")} <CiUser /> {booking.passengers.adults[0].firstName} {totalPassengers > 1 ? " + " + (totalPassengers - 1) + " more" : ""}
-                                            </div>
-                                            <div className='w-1/3 min-w-1/3'>Trip Completed {formatRelative(new Date(booking?.journeyDate), new Date())}</div>
-                                        </div>
-                                    </Card>
-                                )
-                            })
-                            :
-                            <Card>
-                                <p>No completed bookings</p>
-                            </Card>
-                        }
-                    </Tabs.Panel>
-                    <Tabs.Panel className="pt-4" id="cancelled">
-                        {bookings?.cancelledBookings?.length > 0 ?
-                            bookings?.cancelledBookings.map((booking: any) => {
-                                const totalPassengers = booking.passengers.adults.length + booking.passengers.children.length + booking.passengers.infants.length;
-                                return (
-                                    <Card key={booking.bookingId} className='w-full my-4'>
-                                        <div className='flex justify-between items-center'>
-                                            <div className='border-2 border-amber-300 p-4 rounded-full'>
-                                                <GiCommercialAirplane className='text-amber-700' size={40} />
-                                            </div>
-                                            <div className='flex gap-2 justify-center items-center'>
-                                                {booking?.sourceFrom ? booking?.sourceFrom : "Indore (IND)"} <FaArrowRightLong /> {booking?.destinationTo ? booking?.destinationTo : "Mumbai (BOM)"}
-                                            </div>
-                                            <div className='flex gap-2 justify-center items-center'>
-                                                <CiCalendar /> {format(new Date(booking?.journeyDate), "PPP")} <CiUser /> {booking.passengers.adults[0].firstName} {totalPassengers > 1 ? " + " + (totalPassengers - 1) + " more" : ""}
-                                            </div>
-                                            <div className='w-1/3 min-w-1/3'>{booking?.bookingStatusMsg ? booking?.bookingStatusMsg : "Booking Cancelled"}</div>
-                                        </div>
-                                    </Card>
-                                )
-                            })
-                            :
-                            <Card>
-                                <p>No cancelled bookings</p>
-                            </Card>
-                        }
-                    </Tabs.Panel>
-                </Tabs>
+                {isLoading ?
+                    <div className="flex justify-center items-center w-full py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+                    </div>
+                    :
+                    <Tabs className="w-full">
+                        <Tabs.ListContainer className='max-w-md w-full'>
+                            <Tabs.List
+                                className='*:data-[selected=true]:text-amber-800 *:data-[selected=true]:font-extrabold bg-amber-100'
+                                aria-label="Options">
+                                <Tabs.Tab className='text-black' id="upcomming">
+                                    Upcomming
+                                    <Tabs.Indicator />
+                                </Tabs.Tab>
+                                <Tabs.Tab className='text-black' id="completed">
+                                    Completed
+                                    <Tabs.Indicator />
+                                </Tabs.Tab>
+                                <Tabs.Tab className='text-black' id="cancelled">
+                                    Cancelled
+                                    <Tabs.Indicator />
+                                </Tabs.Tab>
+                            </Tabs.List>
+                        </Tabs.ListContainer>
+                        <Tabs.Panel className="pt-4 w-full" id="upcomming">
+                            {bookings?.upcomingBooking?.length > 0 ?
+                                bookings?.upcomingBooking.map((booking: any) => {
+                                    return (
+                                        <Link key={booking.bookingId} href={`/user-booking-details/${booking.bookingId}`}>
+                                            <BookingOverview booking={booking} type="upcomming" />
+                                        </Link>
+                                    )
+                                })
+                                :
+                                <Card>
+                                    <p>No upcoming bookings</p>
+                                </Card>
+                            }
+                        </Tabs.Panel>
+                        <Tabs.Panel className="pt-4" id="completed">
+                            {bookings?.pastBookings?.length > 0 ?
+                                bookings?.pastBookings.map((booking: any) => {
+                                    return (
+                                        <Link key={booking.bookingId} href={`/user-booking-details/${booking.bookingId}`}>
+                                            <BookingOverview booking={booking} type="completed" />
+                                        </Link>
+                                    )
+                                })
+                                :
+                                <Card>
+                                    <p>No completed bookings</p>
+                                </Card>
+                            }
+                        </Tabs.Panel>
+                        <Tabs.Panel className="pt-4" id="cancelled">
+                            {bookings?.cancelledBookings?.length > 0 ?
+                                bookings?.cancelledBookings.map((booking: any) => {
+                                    return (
+                                        <Link key={booking.bookingId} href={`/user-booking-details/${booking.bookingId}`}>
+                                            <BookingOverview booking={booking} type="cancelled" />
+                                        </Link>
+                                    )
+                                })
+                                :
+                                <Card>
+                                    <p>No cancelled bookings</p>
+                                </Card>
+                            }
+                        </Tabs.Panel>
+                    </Tabs>}
             </Card>
         </main>
     )
@@ -158,7 +129,7 @@ export default function BookingsPage() {
         <div className="bg-gray-100 min-h-screen flex flex-col">
             <Header />
             <Suspense fallback={<div className="p-8 text-center">Loading search parameters...</div>}>
-                <SearchContent />
+                <BookingContent />
             </Suspense>
         </div>
     );

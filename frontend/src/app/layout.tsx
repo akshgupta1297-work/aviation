@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import StoreProvider from "../lib/providers/StoreProvider";
 import "./globals.css";
 import "react-datepicker/dist/react-datepicker.css";
-import Header from "@/components/common/Header";
 import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
@@ -33,7 +32,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <StoreProvider>
-          {/* <Header /> */}
           <ToastContainer />
           {children}
         </StoreProvider>

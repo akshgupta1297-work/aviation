@@ -15,10 +15,9 @@ export default function HomePage() {
 
         <div className="px-4 lg:px-10">
           <FlightSearch />
-
           <PromoCards />
         </div>
-        <Image width={400} height={600} className="w-full h-full"
+        {/* <Image width={400} height={600} className="w-full h-full"
           src="https://www.goindigo.in/content/dam/s6web/in/en/assets/static-pages/aircraft-and-fleet/ATR_Aircraft-78Y.png" alt="IndiGo Airbus A320neo aircraft seat map  A320neo V.2" loading="lazy" />
         <Image width={400} height={600} className="w-full h-full"
           src="https://www.goindigo.in/content/dam/s6web/in/en/assets/static-pages/aircraft-and-fleet/A320-NEO-186Y.svg" alt="IndiGo Airbus A320neo aircraft seat map  A320neo V.2" loading="lazy" />
@@ -27,7 +26,7 @@ export default function HomePage() {
 
         <iframe id="seat-map-iframe" title="Seat map" className="w-1/2 h-screen" data-uid="f7ae58c7f1a1cc4abe9273a0f971ba2a"
           src="https://seatmaps.com/seatmaps/f7ae58c7f1a1cc4abe9273a0f971ba2a.html?seatbar=hide&amp;tooltip_on_hover=true">
-        </iframe>
+        </iframe> */}
       </div>
     </main>
   );

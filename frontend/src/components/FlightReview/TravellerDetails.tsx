@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { FaExclamation } from 'react-icons/fa6';
 import { Switch } from "@heroui/react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
