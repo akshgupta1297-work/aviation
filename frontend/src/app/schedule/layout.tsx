@@ -1,23 +1,14 @@
-import Sidebar from "@/components/layout/Sidebar";
-import Header from "@/components/layout/Header";
+import ClientLayoutAdmin from "@/components/admin/admin-layout/ClientLayoutAdmin";
 
 export const metadata = {
-  title: "Schedule | Sky",
+  title: "Schedule | Aviora",
   description: "Overview of Schedule of flights",
 };
 
-export default function ScheduleLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="flex h-screen overflow-auto">
-      <Sidebar />
-      <div className="flex-1">
-        <Header title="Schedule" />
-        <main className="max-h-screen overflow-auto">{children}</main>
-      </div>
-    </div>
-  );
+  return <ClientLayoutAdmin>{children}</ClientLayoutAdmin>;
 }

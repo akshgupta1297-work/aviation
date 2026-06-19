@@ -1,7 +1,6 @@
 // providers/StoreProvider.tsx
 "use client";
 
-import { useRef } from "react";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
 import AuthGuard from "@/components/AuthGuard";

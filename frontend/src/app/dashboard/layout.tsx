@@ -1,8 +1,8 @@
-import Sidebar from "@/components/layout/Sidebar";
-import Header from "@/components/layout/Header";
+import ClientLayout from "@/components/user/user-layout/ClientLayout";
+
 
 export const metadata = {
-  title: "Dashboard | Sky",
+  title: "Dashboard | Aviora",
   description: "Overview of flights, ticket sales, revenue, and bookings",
 };
 
@@ -11,13 +11,5 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="flex h-screen overflow-auto">
-      <Sidebar />
-      <div className="flex-1">
-        <Header />
-        <main className="max-h-screen overflow-auto">{children}</main>
-      </div>
-    </div>
-  );
+  return <ClientLayout>{children}</ClientLayout>;
 }

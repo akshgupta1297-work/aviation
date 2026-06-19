@@ -1,14 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-// const { errorConverter, errorHandler } = require("./src/middlewares/error");
+const dotenv = require("dotenv");
+const { errorConverter, errorHandler } = require("./middlewares/error");
 const cors = require("cors");
 const path = require("path");
-const dotenv = require("dotenv");
+dotenv.config();
 const routes = require("./routes");
 const logger = require("./config/logger");
 // const fs = require("fs");
-dotenv.config();
+
 
 const app = express();
 app.use(cors());
@@ -25,12 +26,12 @@ mongoose.connect(process.env.MONGODB_CONNECTION_URL, {
 
 mongoose.connection.on("error", (error) => {
   console.log("connection failed", error);
-    logger.error("connection failed");
+  logger.error("connection failed");
 });
 
 mongoose.connection.on("connected", (connected) => {
-  console.log("connected with data base....", connected);
-    logger.info("connected with data base");
+  console.log("connected with data base....");
+  logger.info("connected with data base");
 });
 
 // Use your API routes
@@ -48,9 +49,9 @@ app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "client/out", "[slug].html"));
 });
 // // convert error to ApiError, if needed
-// app.use(errorConverter);
+app.use(errorConverter);
 
-// // handle error
-// app.use(errorHandler);
+// handle error
+app.use(errorHandler);
 
 module.exports = app;

@@ -1,0 +1,25 @@
+
+"use client"
+import PaymentHistoryTable from "@/components/admin/admin-dashboard/Paymenthistorytable";
+import AvioraDashboard from "@/components/admin/admin-dashboard/AvioraCharts";
+import { useEffect, useState } from "react";
+
+
+
+export default function DashboardPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+  return (
+    <>
+      <div>
+        <AvioraDashboard />
+        <PaymentHistoryTable />
+      </div>
+    </>
+  );
+}

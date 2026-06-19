@@ -38,20 +38,30 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     useEffect(() => {
         if (isRestoring) return; // wait until we know the auth state
 
-        const isAuthRoute = AUTH_ROUTES.some((r) => pathname.startsWith(r));
+        const isAuthRoute = AUTH_ROUTES.some((r) => pathname === r);
         const isPublicRoute = PUBLIC_ROUTES.some((r) => pathname === r || pathname.startsWith(r + "/"));
 
+        // console.log(isAuthenticated, isAuthRoute, isPublicRoute, ">>>>>>>>>>>");
         // Logged-in user on login/register → send to dashboard
-        if (isAuthenticated && isAuthRoute) {
-            const callbackUrl = searchParams.get("callbackUrl") ?? DEFAULT_AUTHED_REDIRECT;
-            router.replace(callbackUrl);
-            return;
-        }
+        // if (isAuthenticated && isAuthRoute) {
+        //     const callbackUrl = searchParams.get("callbackUrl") ?? DEFAULT_AUTHED_REDIRECT;
+        //     // console.log(callbackUrl, ">>>>>>>>>?????");
+        //     router.replace(callbackUrl);
+        //     return;
+        // }
 
         // Guest on a private route → send to login
         if (!isAuthenticated && !isPublicRoute) {
-            router.replace(`${DEFAULT_LOGIN_REDIRECT}?callbackUrl=${pathname}`);
+            // console.log(`${DEFAULT_LOGIN_REDIRECT}?callbackUrl=${pathname}`, ">>>>>>>><<<<<<<");
+            console.log(pathname, ">>>>>>>><<<<<<<");
+            if (pathname === "/flights-review") {
+                router.replace(`${DEFAULT_LOGIN_REDIRECT}?callbackUrl=${pathname}&flight=${searchParams.get("flight")}&passengers=${searchParams.get("passengers")}`);
+            } else {
+                router.replace(`${DEFAULT_LOGIN_REDIRECT}?callbackUrl=${pathname}`);
+            }
+
         }
+        // setIsRestoring(false);
     }, [isAuthenticated, isRestoring, pathname]);
 
     // ── Loading state while restoring session ────────────────────────────────

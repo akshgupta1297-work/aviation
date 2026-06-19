@@ -1,18 +1,19 @@
 const ApiError = require("../../utils/ApiError");
 const httpStatus = require("http-status");
 const logger = require("../../config/logger");
+const emailService = require("../email.service");
 const Admin = require("../../models/admin.model");
 const { jwtEncode } = require("../../middlewares/authorization");
 // const bcrypt = require("bcryptjs");
 
-const createAdmin = async (adminBody) => {
+const createAdmin = async (adminBody, deviceData, locationData) => {
 
-  
+
   try {
     logger.info("create admin API called");
 
     const allAdmins = await Admin.find();
-    if (allAdmins.length>0) {
+    if (allAdmins.length > 0) {
       logger.error("Admin already exists");
       throw new ApiError(httpStatus.status.UNAUTHORIZED, "Admin already exists");
     }
@@ -26,6 +27,13 @@ const createAdmin = async (adminBody) => {
       logger.error("Something went wrong");
       throw new ApiError(httpStatus.status.UNAUTHORIZED, "Something went wrong");
     }
+    await emailService.accountCreationEmailHTML("Account Creation",
+      admin.email,
+      admin.firstName,
+      admin.userType,
+      deviceData,
+      locationData
+    );
     return admin;
   } catch (error) {
     logger.error(`createAdmin => admin service has error ::> ${error.message}`);
@@ -34,8 +42,7 @@ const createAdmin = async (adminBody) => {
   }
 };
 
-const login = async (email, password) => {
-    console.log(email,password,"adminbody??????");
+const login = async (email, password, deviceData, locationData) => {
   try {
     logger.info("logIn API called");
     const admin = await Admin.findOne({ email: email });
@@ -64,8 +71,17 @@ const login = async (email, password) => {
     const token = jwtEncode(admin.adminId, admin.email, admin.userType);
 
     admin.password = undefined;
+
+    // await emailService.accountLoginEmail(
+    //   "Aviation App - Account Login",
+    //   admin.email,
+    //   admin.firstName,
+    //   admin.userType,
+    //   deviceData,
+    //   locationData
+    // );
     return {
-      user:admin,
+      user: admin,
       token,
     };
   } catch (error) {
@@ -75,7 +91,6 @@ const login = async (email, password) => {
   }
 };
 const getAdmin = async (email, id) => {
-    console.log(email,id,"adminbody??????");
   try {
     logger.info("logIn API called");
     const admin = await Admin.findOne({ email: email, adminId: id });
@@ -96,7 +111,7 @@ const getAdmin = async (email, id) => {
 
     admin.password = undefined;
     return {
-      user:admin,
+      user: admin,
       token,
     };
   } catch (error) {
