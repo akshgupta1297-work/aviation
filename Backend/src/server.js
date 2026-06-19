@@ -11,6 +11,7 @@ const { cancelUnpaidBookings } = require("./services/bookingService/booking.serv
 
 // Schedule cron job to run every day at 02:00 PM
 cron.schedule("0 14 * * *", async () => {
+  // cron.schedule("* * * * *", async () => {
   logger.info("Running daily cron job for generating flight instances...");
   try {
     // Generate instances for the next 7 days
