@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 // import { Menu, X } from "lucide-react";
 
-import Logo from "../../../assets/images/Logo.svg";
+import Logo from "../../../assets/images/AviorLogo.png";
 import Dashboard from "../../../assets/images/SideDashboard.svg";
 import Bookings from "../../../assets/images/SideBook.svg";
 import Schedule from "../../../assets/images/SideCalander.svg";

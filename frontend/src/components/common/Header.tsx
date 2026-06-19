@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { logoutUser } from '@/lib/services/api';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { ChevronDownIcon } from '../user/user-layout/ClientHeader';
-import Logo from "../../assets/images/Logo.svg";
+import Logo from "../../assets/images/AviorLogo.png";
 import Link from 'next/link';
 import { MdEmail } from 'react-icons/md';
 import { PiPhone } from 'react-icons/pi';
@@ -37,7 +37,7 @@ const Header = () => {
 
             {/* Content */}
             <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
-                <div className="h-16 flex items-center justify-between">
+                <div className="h-18 flex items-center justify-between">
                     {/* LEFT */}
                     <Link href={"/"}>
                         <div className="flex items-center gap-4 text-white">

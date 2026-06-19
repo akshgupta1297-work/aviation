@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "../../assets/images/Logo.svg";
+import Logo from "../../assets/images/AviorLogo.png";
 
 export const metadata = {
     title: "Flight | Sky",
@@ -20,7 +20,7 @@ export default function DashboardLayout({
 
                 {/* Content */}
                 <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
-                    <div className="h-16 flex items-center justify-between">
+                    <div className="h-18 flex items-center justify-between">
                         {/* LEFT */}
                         <Link href={"/"}>
                             <div className="flex items-center gap-4 text-white">

@@ -2,7 +2,7 @@ import ClientLayoutAdmin from "@/components/admin/admin-layout/ClientLayoutAdmin
 
 
 export const metadata = {
-  title: "Dashboard | Sky",
+  title: "Dashboard | Aviora",
   description: "Overview of flights, ticket sales, revenue, and bookings",
 };
 

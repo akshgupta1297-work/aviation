@@ -1,7 +1,7 @@
 import ClientLayoutAdmin from "@/components/admin/admin-layout/ClientLayoutAdmin";
 
 export const metadata = {
-  title: "Schedule | Sky",
+  title: "Schedule | Aviora",
   description: "Overview of Schedule of flights",
 };
 

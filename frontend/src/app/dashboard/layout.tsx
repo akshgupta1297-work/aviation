@@ -2,7 +2,7 @@ import ClientLayout from "@/components/user/user-layout/ClientLayout";
 
 
 export const metadata = {
-  title: "Dashboard | Sky",
+  title: "Dashboard | Aviora",
   description: "Overview of flights, ticket sales, revenue, and bookings",
 };
 

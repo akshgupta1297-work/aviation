@@ -1,8 +1,8 @@
 import Header from "@/components/common/Header";
 
 export const metadata = {
-  title: "Login | Sky",
-  description: "Login to Aviation App",
+  title: "Login | Aviora",
+  description: "Login to Aviora",
 };
 
 export default function DashboardLayout({
