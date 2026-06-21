@@ -1,7 +1,7 @@
 
 "use client"
 import PaymentHistoryTable from "@/components/admin/admin-dashboard/Paymenthistorytable";
-import AvioraDashboard from "@/components/admin/admin-dashboard/AvioraCharts";
+import AvioraDashboard from "@/components/admin/admin-dashboard/AvioraDashboard";
 import { useEffect, useState } from "react";
 
 

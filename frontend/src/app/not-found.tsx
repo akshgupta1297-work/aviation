@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import React from 'react'
 import NotFound from "../assets/images/404_not_found.png"
 import { Button } from '@heroui/react'
 import Link from 'next/link'

@@ -4,6 +4,7 @@ import StoreProvider from "../lib/providers/StoreProvider";
 import "./globals.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { ToastContainer } from "react-toastify";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,10 +32,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <StoreProvider>
-          <ToastContainer />
-          {children}
-        </StoreProvider>
+        <Suspense fallback={null}>
+          <StoreProvider>
+            <ToastContainer />
+            {children}
+          </StoreProvider>
+        </Suspense>
       </body>
     </html>
   );

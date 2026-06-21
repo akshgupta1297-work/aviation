@@ -2,7 +2,7 @@
 
 import type { Selection, SortDescriptor } from "@heroui/react";
 
-import { Avatar, Button, Checkbox, Chip, Table, cn } from "@heroui/react";
+import { Avatar, Button, Chip, Table } from "@heroui/react";
 // import { Icon } from "@iconify/react";
 import { useMemo, useState } from "react";
 import { BiChevronUp, BiCopy, BiPencil } from "react-icons/bi";
