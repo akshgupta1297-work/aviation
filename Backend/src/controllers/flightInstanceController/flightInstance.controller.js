@@ -93,8 +93,34 @@ const searchFlightInstancesController = catchAsync(async (req, res) => {
     }
 });
 
+const deleteOldFlightInstancesController = catchAsync(async (req, res) => {
+    try {
+        logger.info("Delete old flight instances API called");
+        const days = req.body?.days || req.query?.days || 1;
+
+        const result = await flightInstanceService.deleteOldFlightInstancesService(days);
+
+        logger.info("Old flight instances deleted successfully");
+        res
+            .status(httpStatus.status.OK)
+            .send(
+                successResponseGenerator(
+                    httpStatus.status.OK,
+                    result.message,
+                    result
+                )
+            );
+    } catch (error) {
+        logger.error(`Flight Instance Delete Error: ${error.message}`);
+        res
+            .status(error.statusCode || httpStatus.status.INTERNAL_SERVER_ERROR)
+            .send(errorResponse(error.statusCode || httpStatus.status.INTERNAL_SERVER_ERROR, error.message));
+    }
+});
+
 module.exports = {
     generateFlightInstancesController,
     getFlightInstancesController,
     searchFlightInstancesController,
+    deleteOldFlightInstancesController,
 };

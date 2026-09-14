@@ -6,11 +6,14 @@ const app = require("./app");
 const server = http.createServer(app);
 const logger = require("./config/logger");
 const cron = require("node-cron");
-const { generateFlightInstancesService } = require("./services/flightInstanceService/flightInstance.service");
+const {
+  generateFlightInstancesService,
+  deleteOldFlightInstancesService,
+} = require("./services/flightInstanceService/flightInstance.service");
 const { cancelUnpaidBookings } = require("./services/bookingService/booking.service");
 
-// Schedule cron job to run every day at 02:00 PM
-cron.schedule("0 14 * * *", async () => {
+// Schedule cron job to run every day at 02:00 AM for generating flight instances
+cron.schedule("0 2 * * *", async () => {
   // cron.schedule("* * * * *", async () => {
   logger.info("Running daily cron job for generating flight instances...");
   try {
@@ -21,6 +24,18 @@ cron.schedule("0 14 * * *", async () => {
     logger.error(`Cron Job Error generating flight instances: ${error.message}`);
   }
 });
+
+// Schedule cron job to run every day at 03:00 AM to delete flight instances older than 8 days
+cron.schedule("0 3 * * *", async () => {
+  logger.info("Running daily cron job for deleting old flight instances (older than 1 days)...");
+  try {
+    const result = await deleteOldFlightInstancesService(1);
+    logger.info(`Cron Job Success: ${result.message}`);
+  } catch (error) {
+    logger.error(`Cron Job Error deleting old flight instances: ${error.message}`);
+  }
+});
+
 cron.schedule("*/15 * * * *", async () => {
   logger.info("Running daily cron job for cancelling unpaid bookings...");
   try {
