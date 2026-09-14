@@ -281,8 +281,39 @@ const searchFlightInstancesService = async (query) => {
     }
 };
 
+const deleteOldFlightInstancesService = async (daysOld = 8) => {
+    try {
+        const days = Number(daysOld) || 8;
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - days);
+        cutoffDate.setHours(0, 0, 0, 0);
+
+        const cutoffDateStr = cutoffDate.toISOString().split("T")[0]; // YYYY-MM-DD
+
+        const filter = {
+            $or: [
+                { departureDateTime: { $lt: cutoffDate } },
+                { date: { $lt: cutoffDateStr } }
+            ]
+        };
+
+        const result = await FlightInstance.deleteMany(filter);
+        logger.info(`deleteOldFlightInstancesService: Deleted ${result.deletedCount} instances older than ${days} days (cutoff: ${cutoffDateStr}).`);
+
+        return {
+            message: `Successfully deleted ${result.deletedCount} flight instances older than ${days} days.`,
+            deletedCount: result.deletedCount,
+            cutoffDate: cutoffDateStr,
+        };
+    } catch (error) {
+        logger.error(`deleteOldFlightInstancesService => Error ::> ${error.message}`);
+        throw new ApiError(httpStatus.status.INTERNAL_SERVER_ERROR, error.message);
+    }
+};
+
 module.exports = {
     generateFlightInstancesService,
     getFlightInstancesService,
     searchFlightInstancesService,
+    deleteOldFlightInstancesService,
 };
