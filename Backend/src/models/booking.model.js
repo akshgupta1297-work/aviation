@@ -26,6 +26,28 @@ const fareSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const flightLegSchema = new mongoose.Schema(
+  {
+    flightInstanceId: { type: String },
+    flightNumber: { type: String },
+    airlineName: { type: String },
+    airlineLogo: { type: String },
+    sourceAirportId: { type: String },
+    sourceAirportCode: { type: String },
+    sourceAirportCity: { type: String },
+    sourceAirportCountry: { type: String },
+    destinationAirportId: { type: String },
+    destinationAirportCode: { type: String },
+    destinationAirportCity: { type: String },
+    destinationAirportCountry: { type: String },
+    departureDateTime: { type: Date },
+    arrivalDateTime: { type: Date },
+    baseFare: { type: Number },
+    status: { type: String, default: "SCHEDULED" },
+  },
+  { _id: false }
+);
+
 const bookingSchema = new mongoose.Schema(
   {
     bookingId: {
@@ -44,8 +66,9 @@ const bookingSchema = new mongoose.Schema(
     },
     flightInstanceIds: {
       type: [String],
-      required: true,
+      default: [],
     },
+    flightInstances: [flightLegSchema],
     journeyDate: {
       type: Date,
     },

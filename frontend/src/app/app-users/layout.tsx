@@ -2,7 +2,7 @@ import ClientLayoutAdmin from "@/components/admin/admin-layout/ClientLayoutAdmin
 
 export const metadata = {
   title: "Users | Sky",
-  description: "Overview of Users of Aviation App",
+  description: "Overview of Users of Aviora",
 };
 
 export default function DashboardLayout({

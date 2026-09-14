@@ -159,7 +159,7 @@ export async function restoreSession(dispatch: AppDispatch): Promise<void> {
     if (!token) return;
 
     try {
-        const responce = await apiFetch<LoginResponse>("/admin/get", {
+        const responce = await apiFetch<LoginResponse>("/user/get", {
             headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -286,4 +286,17 @@ export async function getBookingDetailsByBookingId(token: string, bookingId: str
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
     });
+}
+
+export async function getUserProfile(token: string) {
+    try {
+        const response = await apiFetch<any>("/user/get", {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response?.data?.user ?? null;
+    } catch (err) {
+        console.error("Error fetching user profile:", err);
+        return null;
+    }
 }

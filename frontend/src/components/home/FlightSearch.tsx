@@ -54,7 +54,7 @@ const FlightSearch = () => {
     }
 
     return (
-        <div className="bg-white rounded-3xl shadow-2xl p-8 -mt-24 relative z-30 max-w-7xl mx-auto">
+        <div id="book-flight" className="bg-white rounded-3xl shadow-2xl p-8 -mt-24 relative z-30 max-w-7xl mx-auto">
             <TripTypeSelector
                 value={tripType}
                 onChange={(e) => changeTripeType(e)}
@@ -83,16 +83,10 @@ const FlightSearch = () => {
                 </div>
 
                 <div className="lg:col-span-2">
-                    {/* <DatePickerField
-                        label="Depart On"
-                        value={departDate}
-                        onChange={setDepartDate}
-                    /> */}
-                    <div className="border rounded-xl p-4 bg-white min-w-[180px]">
+                    <div className="border rounded-xl p-4 bg-white min-w-45">
                         <p className="text-sm text-gray-500 mb-1">Depart On</p>
                         <DatePicker
-                            // showIcon
-                            className="min-w-[180px] custom-datepicker"
+                            className="min-w-45 custom-datepicker"
                             selected={departDate}
                             onChange={(e: SetStateAction<Date | null>) => {
                                 setDepartDate(e)
@@ -109,20 +103,11 @@ const FlightSearch = () => {
                     </div>
 
                 </div>
-                {/* {tripType === "roundtrip" && ( */}
                 <div className="lg:col-span-2">
-                    {/* <DatePickerField
-                        label="Return On"
-                        value={returnDate}
-                        disabled={tripType !== "roundtrip"}
-                        onChange={setReturnDate}
-                    /> */}
-                    <div className="border rounded-xl p-4 bg-white min-w-[180px]">
+                    <div className="border rounded-xl p-4 bg-white min-w-45">
                         <p className="text-sm text-gray-500 mb-1">Return On</p>
                         <DatePicker
-                            // showIcon
-                            // disabled={tripType !== "roundtrip"}
-                            className="min-w-[180px] custom-datepicker"
+                            className="min-w-45 custom-datepicker"
                             selected={returnDate}
                             onChange={(e: SetStateAction<Date | null | undefined>) => {
                                 setReturnDate(e)

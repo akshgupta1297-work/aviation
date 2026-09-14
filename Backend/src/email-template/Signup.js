@@ -66,7 +66,7 @@ const signUpEmailTemplate = (name, userType, deviceData, locationData) => {
                     font-weight: 600;
                   "
                 >
-                  Thank you for signing up for our Aviation App. We’re excited
+                  Thank you for signing up for our Aviora. We’re excited
                   to have you with us.
                 </p>
                 <p
@@ -121,7 +121,7 @@ const signUpEmailTemplate = (name, userType, deviceData, locationData) => {
                 style="background-color: #2d314b; color: white; padding: 50px"
               >
                 <h2 style="margin: 0; font-size: 34px; font-weight: 700">
-                  Aviation
+                  Aviora
                 </h2>
 
                 <p style="margin-top: 20px; font-size: 18px; line-height: 32px">

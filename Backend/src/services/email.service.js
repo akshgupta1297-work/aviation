@@ -57,13 +57,13 @@ const sendResetPasswordEmail = async (emailSubject, to, token, name) => {
     const subject = emailSubject;
     const text = `Dear ${name},
 
-      We received a request to reset your password for your Aviation App account. Please use the following One-Time Password (OTP) to proceed:
+      We received a request to reset your password for your Aviora account. Please use the following One-Time Password (OTP) to proceed:
 
       ${token.token}
       
       If you did not request a password reset, please contact our support team immediately to secure your account. \n
       Regards
-      Team Aviation App
+      Team Aviora
       `;
     await sendEmail(to, subject, text);
   } catch (error) {
@@ -119,23 +119,23 @@ const accountCreationEmail = async (emailSubject, to, name, userType) => {
     const subject = emailSubject;
     const text = `Dear ${name},
 
-    Welcome to Aviation App!
+    Welcome to Aviora!
 
     Your ${userType} user account has been successfully created. To access your account, please follow these steps:
     1 . Visit ${process.env.BASE_URL}
     2 . Enter your registered email address and click “Next”.
     3 . You will be redirected to the password creation page.
-    4 . Create a secure password and enter the OTP sent to your email by Aviation App, 
+    4 . Create a secure password and enter the OTP sent to your email by Aviora, 
     5 . Click "Sign Up" to complete the registration process. 
-    5 . Your Aviation App account is now registered successfully and you will be prompted to sign in 
+    5 . Your Aviora account is now registered successfully and you will be prompted to sign in 
     6 . Enter your newly registered password and click on the “Sign In” button.
     
     If you encounter any issues, please contact our support team for assistance.
 
-    Thank you for choosing Aviation App!
+    Thank you for choosing Aviora!
 
     Best Regards
-    The Aviation App Team
+    The Aviora Team
     `;
     await sendEmail(to, subject, text);
   } catch (error) {
@@ -174,16 +174,16 @@ const resentTheInvitation = async (emailSubject, to, name) => {
     const subject = emailSubject;
     const text = `Dear ${name},
 
-    We noticed that you have not yet accepted the invitation to join Aviation App. Your administrator has resent the invitation for you to complete your account setup.
+    We noticed that you have not yet accepted the invitation to join Aviora. Your administrator has resent the invitation for you to complete your account setup.
 
     To proceed, please follow these steps:
 
    1 . Visit ${process.env.BASE_URL}
    2 . Enter your registered email address and click on the “Next”.
    3 . You will be redirected to the password creation page.
-   4 . Create a password, enter the OTP sent to your email by Aviation App, and click 
+   4 . Create a password, enter the OTP sent to your email by Aviora, and click 
        on the “Sign Up” button.
-   5 . Your Aviation App account is now registered successfully and you will be prompted to sign in
+   5 . Your Aviora account is now registered successfully and you will be prompted to sign in
    6 . Enter your newly registered password and click on the “Sign In” button`;
 
     await sendEmail(to, subject, text);

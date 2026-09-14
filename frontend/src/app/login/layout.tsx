@@ -11,9 +11,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 min-h-screen flex flex-col">
       <Header />
-      {children}
+      <main className="flex-1 flex flex-col">
+        {children}
+      </main>
     </div>
-  )
+  );
 }

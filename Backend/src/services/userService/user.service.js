@@ -96,7 +96,7 @@ const login = async (email, password, deviceData, locationData) => {
     console.log(locationData);
 
     // await emailService.accountLoginEmail(
-    //   "Aviation App - Account Login",
+    //   "Aviora - Account Login",
     //   user.email,
     //   user.firstName,
     //   user.userType,
@@ -116,7 +116,7 @@ const login = async (email, password, deviceData, locationData) => {
 const getUser = async (email, id) => {
   try {
     logger.info("logIn API called");
-    const user = await User.findOne({ email: email, userId: id });
+    const user = await User.findOne({ email: email, userId: id }).lean();
     if (!user) {
       logger.info("user does not exist");
       throw new ApiError(httpStatus.status.BAD_REQUEST, "user does not exist");
