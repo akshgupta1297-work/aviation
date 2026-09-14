@@ -73,7 +73,7 @@ const login = async (email, password, deviceData, locationData) => {
     admin.password = undefined;
 
     // await emailService.accountLoginEmail(
-    //   "Aviation App - Account Login",
+    //   "Aviora - Account Login",
     //   admin.email,
     //   admin.firstName,
     //   admin.userType,

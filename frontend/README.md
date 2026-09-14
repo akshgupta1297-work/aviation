@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛫 Aviora Frontend Web Application
 
-## Getting Started
+Modern flight booking and passenger portal built with Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, HeroUI, and Redux Toolkit.
 
-First, run the development server:
+## 🚀 Quick Start
 
+### 1. Install Dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Configuration
+Create a `.env.local` or `.env` file in this directory:
+```env
+NEXT_PUBLIC_BASEURL=http://localhost:9000/aviation-app/api/v1
+NEXT_PUBLIC_STRIPE_API_KEY=pk_test_...
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🗂️ Application Structure
+- **`src/app/`**: Next.js App Router routes:
+  - `/`: Landing page, flight search widget, promotional offers.
+  - `/flights-search`: Flight search results with sidebar filters and multi-leg flights.
+  - `/flights-review`: Multi-step checkout (itinerary, seat map, meals, baggage, passenger info, Stripe payment).
+  - `/user-bookings`: Passenger booking history (Upcoming, Completed, Cancelled).
+  - `/user-booking-details/[id]`: Interactive booking details and e-ticket receipt.
+  - `/profile`: Passenger profile, travel preferences, and security settings.
+  - `/admin-dashboard`: Admin metrics, fleet, and schedule management.
+  - `/login`: Responsive authentication portal.
+- **`src/components/`**: Reusable UI components (FlightBooking, FlightReview, Admin, Home, Common).
+- **`src/lib/`**: Redux Toolkit slices (user, airport), custom hooks, and API services.

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import { Avatar, Dropdown, Separator } from "@heroui/react";
-import { logoutUser, restoreSession } from "@/lib/services/api";
+import { logoutUser } from "@/lib/services/api";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { useRouter } from "next/navigation";
 import { IoClose, IoMenu } from "react-icons/io5";
@@ -97,12 +98,7 @@ export default function HeaderAdmin({
   const userEmail = user?.email ?? "";
   const userAvatar = user?.avatar;
 
-
   const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    // restoreSession(dispatch)
-  }, [])
 
   const logOut = () => {
     router.push("/")
@@ -225,12 +221,14 @@ export default function HeaderAdmin({
                 </div>
               </div>
               <Dropdown.Menu>
-                <Dropdown.Item className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
-                  </svg>
-                  Profile
+                <Dropdown.Item className="p-0">
+                  <Link href="/profile" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-50 cursor-pointer w-full">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                        d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
+                    </svg>
+                    Profile
+                  </Link>
                 </Dropdown.Item>
                 {/* <Dropdown.Item className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-50 cursor-pointer">
                   <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

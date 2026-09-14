@@ -9,15 +9,65 @@ const stripe = require("../../config/stripe");
 const createBooking = async (bookingData) => {
   // Generate random 6-character PNR
   const bookingReference = "PNR" + Math.floor(100000 + Math.random() * 900000);
-  // console.log(bookingData, bookingReference);
+
+  let flightInstances = bookingData.flightInstances || [];
+  const flightInstanceIds =
+    bookingData.flightInstanceIds ||
+    (Array.isArray(flightInstances) ? flightInstances.map((f) => f.flightInstanceId || f._id).filter(Boolean) : []);
+
+  // If flightInstances not provided or empty, query them from DB to create the snapshot
+  if ((!flightInstances || flightInstances.length === 0) && flightInstanceIds && flightInstanceIds.length > 0) {
+    const instances = await FlightInstance.find({ flightInstanceId: { $in: flightInstanceIds } }).lean();
+    if (instances && instances.length > 0) {
+      flightInstances = instances.map((inst) => ({
+        flightInstanceId: inst.flightInstanceId,
+        flightNumber: inst.flightNumber,
+        airlineName: inst.airlineName,
+        airlineLogo: inst.airlineLogo,
+        sourceAirportId: inst.sourceAirportId,
+        sourceAirportCode: inst.sourceAirportCode,
+        sourceAirportCity: inst.sourceAirportCity,
+        sourceAirportCountry: inst.sourceAirportCountry,
+        destinationAirportId: inst.destinationAirportId,
+        destinationAirportCode: inst.destinationAirportCode,
+        destinationAirportCity: inst.destinationAirportCity,
+        destinationAirportCountry: inst.destinationAirportCountry,
+        departureDateTime: inst.departureDateTime,
+        arrivalDateTime: inst.arrivalDateTime,
+        baseFare: inst.baseFare,
+        status: inst.status || "SCHEDULED",
+      }));
+    }
+  } else if (Array.isArray(flightInstances) && flightInstances.length > 0) {
+    // Sanitize and ensure format
+    flightInstances = flightInstances.map((inst) => ({
+      flightInstanceId: inst.flightInstanceId || inst._id,
+      flightNumber: inst.flightNumber,
+      airlineName: inst.airlineName,
+      airlineLogo: inst.airlineLogo,
+      sourceAirportId: inst.sourceAirportId,
+      sourceAirportCode: inst.sourceAirportCode,
+      sourceAirportCity: inst.sourceAirportCity,
+      sourceAirportCountry: inst.sourceAirportCountry,
+      destinationAirportId: inst.destinationAirportId,
+      destinationAirportCode: inst.destinationAirportCode,
+      destinationAirportCity: inst.destinationAirportCity,
+      destinationAirportCountry: inst.destinationAirportCountry,
+      departureDateTime: inst.departureDateTime,
+      arrivalDateTime: inst.arrivalDateTime,
+      baseFare: inst.baseFare,
+      status: inst.status || "SCHEDULED",
+    }));
+  }
 
   const booking = await Booking.create({
     ...bookingData,
+    flightInstanceIds,
+    flightInstances,
     bookingReference,
     paymentStatus: "PENDING",
     bookingStatus: "PENDING",
   });
-  // console.log(booking);
 
   if (!booking) {
     throw new Error("Booking not created");
@@ -32,42 +82,42 @@ const confirmBooking = async (bookingId) => {
   console.log(bookingId, "??????");
 
   const booking = await Booking.findOne({ bookingId: bookingId });
-  // console.log(booking, "????booking??????");
   if (!booking) {
     throw new Error("Booking not found");
   }
 
   booking.paymentStatus = "PAID";
   booking.bookingStatus = "CONFIRMED";
-
-  // console.log(booking, "????booking??????");
   await booking.save();
 
-  // Lock the seats in the FlightInstances
+  // Lock the seats in the FlightInstances if they exist
   const seatSelections = booking.seatSelections || {};
+  const instanceIds =
+    booking.flightInstanceIds && booking.flightInstanceIds.length > 0
+      ? booking.flightInstanceIds
+      : (booking.flightInstances || []).map((f) => f.flightInstanceId).filter(Boolean);
 
-  for (const flightInstanceId of booking.flightInstanceIds) {
+  for (const flightInstanceId of instanceIds) {
     const instance = await FlightInstance.findOne({ flightInstanceId });
     if (instance) {
       const seatsToBook = Object.values(seatSelections[flightInstanceId] || {});
-      // console.log(seatsToBook.length, "<<<<<<<>>>>>?????seatsToBook.length");
 
       let updated = false;
       if (instance.seatAvailability && instance.seatAvailability.length > 0) {
-        instance.seatAvailability.forEach(seat => {
+        instance.seatAvailability.forEach((seat) => {
           if (seatsToBook.includes(seat.seatNo)) {
             seat.isBooked = true;
             updated = true;
           }
         });
       }
-      instance.availableSeats.economy = instance.availableSeats.economy - seatsToBook.length;
-      // console.log(updated, "updated???????????");
+      if (instance.availableSeats?.economy !== undefined) {
+        instance.availableSeats.economy = instance.availableSeats.economy - seatsToBook.length;
+      }
 
       if (updated) {
-        // Mongoose sometimes doesn't track deep array modifications automatically
-        instance.markModified('seatAvailability');
-        instance.markModified('availableSeats');
+        instance.markModified("seatAvailability");
+        instance.markModified("availableSeats");
         await instance.save();
       }
     }
@@ -84,12 +134,6 @@ const getBookingsByUserId = async (userId) => {
   })
     .sort({ createdAt: -1 })
     .lean();
-  // const myflightInstance = await FlightInstance.find({
-  //   flightInstanceId: { $in: upcomingBooking[0].flightInstanceIds }
-  // })
-  //   .sort({ createdAt: -1 })
-  //   .lean();
-  // console.log(myflightInstance);
 
   const pastBookings = await Booking.find({
     userId,
@@ -99,18 +143,21 @@ const getBookingsByUserId = async (userId) => {
   })
     .sort({ journeyDate: -1 })
     .lean();
+
   const cancelledBookings = await Booking.find({
     userId,
     bookingStatus: "CANCELLED"
   })
     .sort({ createdAt: -1 })
     .lean();
-  const bookings = { upcomingBooking, pastBookings, cancelledBookings }
+
+  const bookings = { upcomingBooking, pastBookings, cancelledBookings };
   if (!bookings) {
     throw new Error("Booking not found");
   }
   return bookings;
-}
+};
+
 const getBookingDetailsByBookingId = async (userId, bookingId) => {
   const booking = await Booking.findOne({
     userId: userId,
@@ -118,21 +165,31 @@ const getBookingDetailsByBookingId = async (userId, bookingId) => {
   })
     .sort({ createdAt: -1 })
     .lean();
-  const myflightInstance = await FlightInstance.find({
-    flightInstanceId: { $in: booking.flightInstanceIds }
-  })
-    .sort({ createdAt: -1 })
-    .lean();
-  console.log(myflightInstance, "myflightInstance");
-
-
 
   if (!booking) {
     throw new Error("Booking not found");
   }
-  const bookingDetails = { ...booking, myflightInstance };
+
+  // First check if booking document already contains the full snapshot of flightInstances
+  let flightInstances = booking.flightInstances || [];
+
+  // Fallback for older records where flightInstances was not saved
+  if ((!flightInstances || flightInstances.length === 0) && booking.flightInstanceIds && booking.flightInstanceIds.length > 0) {
+    const myflightInstance = await FlightInstance.find({
+      flightInstanceId: { $in: booking.flightInstanceIds }
+    })
+      .sort({ createdAt: -1 })
+      .lean();
+    flightInstances = myflightInstance || [];
+  }
+
+  const bookingDetails = {
+    ...booking,
+    flightInstances,
+    myflightInstance: flightInstances, // Supported for backward compatibility
+  };
   return bookingDetails;
-}
+};
 
 const cancelUnpaidBookings = async () => {
   const bookings = await Booking.find({ paymentStatus: "PENDING", bookingStatus: "PENDING", createdAt: { $lt: new Date(Date.now()) } });

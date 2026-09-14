@@ -9,6 +9,7 @@ const { successResponseGenerator, errorResponse } = require("../../utils/ApiHelp
 const createIntent = catchAsync(async (req, res) => {
   const {
     flightInstanceIds,
+    flightInstances,
     passengers,
     contact,
     journeyDate,
@@ -38,6 +39,7 @@ const createIntent = catchAsync(async (req, res) => {
   const booking = await bookingService.createBooking({
     userId,
     flightInstanceIds,
+    flightInstances,
     passengers,
     contact,
     journeyDate: new Date(journeyDate),

@@ -26,7 +26,7 @@ export const flightTax = [
     { type: "udf", value: 150, description: "User Development Fee" },
     { type: "psf", value: 130, description: "Passenger Service Fee" },
     { type: "airportCharges", value: 120, description: "Airport charges" },
-    { type: "convenienceFee", value: 99, description: "Convenience fee by aviation app" },
+    { type: "convenienceFee", value: 99, description: "Convenience fee by Aviora" },
 ]
 
 export const routeData = [

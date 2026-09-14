@@ -3,6 +3,7 @@ import Image from "next/image";
 import Plan1 from "../../assets/images/Plan-1.png"
 import Plan2 from "../../assets/images/Paln-2.png"
 import Plan3 from "../../assets/images/Plan-3.png"
+import Link from "next/link";
 
 const cards = [
     {
@@ -57,9 +58,9 @@ const PromoCards = () => {
                             </p>
                         </div>
 
-                        <button className="bg-white text-black px-5 py-2 rounded-xl w-fit font-semibold hover:bg-gray-100 transition">
+                        <Link href="#book-flight" className="bg-white text-black px-5 py-2 rounded-xl w-fit font-semibold hover:bg-gray-100 transition">
                             Book Now
-                        </button>
+                        </Link>
                     </div>
                 </div>
             ))}

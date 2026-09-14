@@ -1,5 +1,5 @@
 const signInEmailTemplate = (name, userType, deviceData, locationData) => {
-    return `<!doctype html>
+  return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -86,7 +86,7 @@ const signInEmailTemplate = (name, userType, deviceData, locationData) => {
                   <strong>
                     ${locationData?.city || "Unknown City"},
                     ${locationData?.region || ""}, ${locationData?.country_name
-        || ""}
+    || ""}
                   </strong>
                 </p>
                 <p
@@ -109,7 +109,7 @@ const signInEmailTemplate = (name, userType, deviceData, locationData) => {
                 style="background-color: #2d314b; color: white; padding: 50px"
               >
                 <h2 style="margin: 0; font-size: 34px; font-weight: 700">
-                  Aviation
+                  Aviora
                 </h2>
 
                 <p style="margin-top: 20px; font-size: 18px; line-height: 32px">
@@ -141,5 +141,5 @@ const signInEmailTemplate = (name, userType, deviceData, locationData) => {
 }
 
 module.exports = {
-    signInEmailTemplate
+  signInEmailTemplate
 }

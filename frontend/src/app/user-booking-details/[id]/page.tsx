@@ -53,7 +53,10 @@ const BookingDetails = () => {
 
     // return (
     //     <main className="w-full max-w-7xl mx-auto mt-10 px-4 py-6 gap-6">
-    const sortedInstances = booking?.myflightInstance ? [...booking.myflightInstance].sort((a, b) => new Date(a.departureDateTime).getTime() - new Date(b.departureDateTime).getTime()) : [];
+    const rawInstances = booking?.flightInstances || booking?.myflightInstance || [];
+    const sortedInstances = rawInstances.length > 0
+        ? [...rawInstances].sort((a: any, b: any) => new Date(a.departureDateTime).getTime() - new Date(b.departureDateTime).getTime())
+        : [];
 
     const allPassengers = booking ? [
         ...(booking.passengers?.adults || []),
@@ -61,9 +64,14 @@ const BookingDetails = () => {
         ...(booking.passengers?.infants || []),
     ] : [];
 
+    const isTripPast = booking?.journeyDate ? new Date(booking.journeyDate) < new Date() : false;
+    const bookingRefDisplay = booking?.bookingReference
+        ? (booking.bookingReference.includes("R") ? booking.bookingReference.split("R")[1] : booking.bookingReference)
+        : (booking?.bookingId ? booking.bookingId.slice(0, 8) : "—");
+
     return (
         <main className="w-full max-w-6xl mx-auto mt-8 px-4 py-6 gap-6">
-            <button onClick={() => router.back()} className="flex items-center gap-2 text-amber-700 hover:text-amber-800 font-medium mb-4">
+            <button onClick={() => router.back()} className="flex items-center gap-2 text-amber-700 hover:text-amber-800 font-medium mb-4 cursor-pointer">
                 <IoMdArrowBack /> Back to Bookings
             </button>
 
@@ -74,35 +82,37 @@ const BookingDetails = () => {
                     </div>
                 </Card>
             ) : (
-                <div className='lg:flex justify-between'>
-                    <div className="flex flex-col gap-6">
+                <div className='lg:flex justify-between gap-6'>
+                    <div className="flex-1 flex flex-col gap-6">
                         {/* Top Status Bar */}
                         <div className={`${booking.bookingStatus === "CANCELLED" ? "bg-red-50 border border-red-200" : "bg-green-50 border border-green-200"} rounded-lg p-5 flex justify-between items-center shadow-sm`}>
                             <div className="flex items-center gap-3">
                                 {booking.bookingStatus === "CANCELLED" ? <FaXmark className='bg-red-500 text-white rounded-full p-1 text-3xl' /> : <FaCheckCircle className="text-green-500 text-3xl" />}
                                 <div className="text-xl font-bold text-gray-800">
-                                    {booking.bookingStatus === "CANCELLED" ? "Trip Cancelled" : booking.journeyDate < new Date().toISOString() ? "Trip Completed" : "Trip Confirmed"}
+                                    {booking.bookingStatus === "CANCELLED" ? "Trip Cancelled" : isTripPast ? "Trip Completed" : "Trip Confirmed"}
                                 </div>
                             </div>
                             <div className="text-sm text-gray-600 font-medium">
-                                Booking Id <span className="text-gray-900 font-bold ml-1">{booking.bookingReference.split('R')[1]}</span>
+                                Booking Id <span className="text-gray-900 font-bold ml-1">{bookingRefDisplay}</span>
                             </div>
                         </div>
 
                         {/* Main Flight Info Card */}
-                        <Card className="p-0 overflow-hidden shadow-md rounded-xl">
+                        <Card className="p-3! overflow-hidden shadow-md rounded-xl relative">
                             {/* Header */}
-                            <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-                                <div className="flex items-center gap-4">
+                            <div className='absolute lg:top-0 bottom-131 xl:right-69 lg:right-77 right-0 lg:w-5 w-3 lg:h-3 h-5 lg:rounded-b-lg rounded-l-lg bg-gray-100'></div>
+                            <div className='absolute lg:bottom-0 bottom-131 xl:left-125 lg:left-125 left-0 lg:w-5 w-3 lg:h-3 h-5 lg:rounded-t-lg rounded-r-lg bg-gray-100'></div>
+                            <div className="bg-gray-50 border-b border-gray-200 px-4 flex items-center">
+                                <div className="flex items-center gap-4 py-2">
                                     <div className='flex h-10 w-10 flex-col items-center '>
-                                        <div className='bg-amber-200 w-full text-center text-xs rounded-t-lg'>{format(new Date(sortedInstances[0]?.departureDateTime || new Date()), "MMM")}</div>
-                                        <div className='rounded-b-lg bg-gray-200 w-full text-center'>{format(new Date(sortedInstances[0]?.departureDateTime || new Date()), "dd")}</div>
+                                        <div className='bg-amber-200 w-full text-center text-xs rounded-t-lg font-semibold'>{format(new Date(sortedInstances[0]?.departureDateTime || booking?.journeyDate || new Date()), "MMM")}</div>
+                                        <div className='rounded-b-lg bg-gray-200 w-full text-center font-bold text-sm'>{format(new Date(sortedInstances[0]?.departureDateTime || booking?.journeyDate || new Date()), "dd")}</div>
                                     </div>
                                     <div>
-                                        <div className="font-bold text-gray-800 flex items-center gap-2">
-                                            {booking.sourceFrom?.split(' ')[0] || "INDORE"}
+                                        <div className="font-bold text-xs text-gray-800 flex items-center gap-2">
+                                            {booking.sourceFrom || sortedInstances[0]?.sourceAirportCity || "Source"}
                                             <span className="text-gray-400">→</span>
-                                            {booking.destinationTo?.split(' ')[0] || "VARANASI"}
+                                            {booking.destinationTo || sortedInstances[sortedInstances.length - 1]?.destinationAirportCity || "Destination"}
                                         </div>
                                         <div className="text-xs text-gray-500 mt-1">
                                             {sortedInstances.length > 1 ? `${sortedInstances.length - 1} Stop` : 'Non-stop'}
@@ -112,27 +122,26 @@ const BookingDetails = () => {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col md:flex-row">
+                            <div className="flex flex-col lg:flex-row">
                                 {/* Left Side: Flight Legs */}
-                                <div className="flex-grow p-6">
+                                <div className="grow p-6">
                                     {sortedInstances.map((instance: any, idx: number) => (
-                                        <div key={instance.flightInstanceId}>
+                                        <div key={instance.flightInstanceId || idx}>
                                             <div className="flex flex-col md:flex-row gap-6">
                                                 {/* Airline Info */}
-                                                <div className="flex flex-col items-center md:items-start md:w-32 flex-shrink-0">
-                                                    <div className="text-white p-2 rounded-md">
-                                                        {/* <GiCommercialAirplane className="text-2xl" /> */}
+                                                <div className="flex flex-col items-center md:items-start md:w-32 shrink-0">
+                                                    <div className="p-2 rounded-md">
                                                         <Image
                                                             src={instance.airlineLogo || "/"}
-                                                            alt={instance.airline || "Sky Airlines"}
+                                                            alt={instance.airlineName || instance.airline || "Aviora Airlines"}
                                                             width={50}
                                                             height={50}
-                                                            className="rounded-md"
+                                                            className="rounded-md object-contain"
                                                         />
                                                     </div>
-                                                    <div className="text-sm font-semibold text-gray-800">{instance.airline || "Sky Airlines"}</div>
+                                                    <div className="text-sm font-semibold text-gray-800 text-center md:text-left">{instance.airlineName || instance.airline || "Aviora Airlines"}</div>
                                                     <div className="text-xs text-gray-500 mt-1">{instance.flightNumber || "6E-1234"}</div>
-                                                    <div className="text-xs text-gray-500 mt-1">Economy</div>
+                                                    <div className="text-xs text-gray-500 mt-0.5">Economy</div>
                                                 </div>
 
                                                 {/* Time & Airports */}
@@ -143,7 +152,7 @@ const BookingDetails = () => {
                                                             <span className="text-lg">{instance.sourceAirportCode}</span>
                                                             {format(new Date(instance.departureDateTime), "HH:mm")}
                                                         </div>
-                                                        <div className="text-xs text-gray-500 mt-1 max-w-[150px] mx-auto md:mx-0">
+                                                        <div className="text-xs text-gray-500 mt-1 max-w-37.5 mx-auto md:mx-0">
                                                             {instance.sourceAirportCity}
                                                         </div>
                                                     </div>
@@ -192,11 +201,11 @@ const BookingDetails = () => {
                                             {/* Layover Divider */}
                                             {idx < sortedInstances.length - 1 && (
                                                 <div className="relative flex py-6 items-center">
-                                                    <div className="flex-grow border-t border-gray-200"></div>
-                                                    <span className="flex-shrink-0 mx-4 text-xs text-gray-600 bg-white px-4 py-1.5 rounded-full border border-gray-200 font-medium shadow-sm">
+                                                    <div className="grow border-t border-gray-200"></div>
+                                                    <span className="shrink-0 mx-4 text-xs text-gray-600 bg-white px-4 py-1.5 rounded-full border border-gray-200 font-medium shadow-sm">
                                                         Change of flight | <span className="font-bold">{formatDuration(instance.arrivalDateTime, sortedInstances[idx + 1].departureDateTime)}</span> layover at <span className="font-bold">{instance.destinationAirportCity}</span>
                                                     </span>
-                                                    <div className="flex-grow border-t border-gray-200"></div>
+                                                    <div className="grow border-t border-gray-200"></div>
                                                 </div>
                                             )}
                                         </div>
@@ -209,11 +218,12 @@ const BookingDetails = () => {
                                             <span>Seats:</span>
                                             <div className="flex gap-4 flex-wrap ml-1">
                                                 {sortedInstances.map((inst: any) => {
-                                                    const seats = Object.values(booking.seatSelections[inst.flightInstanceId] || {});
+                                                    const instId = inst.flightInstanceId || inst._id;
+                                                    const seats = Object.values(booking.seatSelections[instId] || {});
                                                     if (seats.length === 0) return null;
                                                     return (
-                                                        <span key={inst.flightInstanceId} className="text-gray-800">
-                                                            {inst.sourceAirportCode} <span className="text-gray-400">→</span> {inst.destinationAirportCode} ({seats.join(", ")})
+                                                        <span key={instId} className="text-gray-800 font-semibold">
+                                                            {inst.sourceAirportCode} <span className="text-gray-400 font-normal">→</span> {inst.destinationAirportCode} ({seats.join(", ")})
                                                         </span>
                                                     );
                                                 })}
@@ -223,32 +233,81 @@ const BookingDetails = () => {
                                 </div>
 
                                 {/* Right Sidebar: Baggage & Fare Rules */}
-                                <div className="w-full md:w-64 border-dashed border-t md:border-t-0 md:border-l border-gray-200 p-6 flex flex-col gap-8">
-                                    <div>
-                                        <h3 className="text-xs text-gray-400 font-bold mb-3 uppercase tracking-wider">Baggage</h3>
-                                        <div className="text-sm font-medium text-gray-800 mb-2">Check-In: 15KG (1 Piece)</div>
-                                        <div className="text-sm font-medium text-gray-800">Cabin: 7KG (1 Piece)</div>
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xs text-gray-400 font-bold mb-3 uppercase tracking-wider">Refund Type</h3>
-                                        <div className="text-sm font-semibold text-green-600">Partially Refundable</div>
-                                    </div>
-                                    <div>
-                                        <button className="text-sm font-semibold text-blue-600 hover:underline">Fare Rules</button>
-                                    </div>
+                                <div className="grow border-dashed border-t lg:border-t-0 lg:border-l border-gray-200">
+
+                                    {sortedInstances.map((instance: any, idx: number) => (
+                                        <div key={instance.flightInstanceId || idx}>
+                                            <div className="w-full md:w-64  p-6 flex flex-col gap-8">
+                                                <div>
+                                                    <h3 className="text-xs text-gray-400 font-bold mb-3 uppercase tracking-wider">Baggage</h3>
+                                                    <div className="text-sm font-medium text-gray-800 mb-2">Check-In: 15KG (1 Piece)</div>
+                                                    <div className="text-sm font-medium text-gray-800">Cabin: 7KG (1 Piece)</div>
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-xs text-gray-400 font-bold mb-3 uppercase tracking-wider">Refund Type</h3>
+                                                    <div className="text-sm font-semibold text-green-600">Partially Refundable</div>
+                                                </div>
+                                                <div>
+                                                    <button className="text-sm font-semibold text-amber-700 hover:underline cursor-pointer">Fare Rules</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </Card>
                     </div>
-                    {booking.bookingStatus !== "CANCELLED" && <div>
-                        <Card>
-                            <div>Manage Your Bookings</div>
-                        </Card>
-                        <Card className="my-4 h-fit">
-                            <FareDetails flightInstances={sortedInstances} discountValue={200} seatCharges={200} mealCharges={200} baggageCharges={200} />
-                        </Card>
 
-                    </div>}
+                    {/* Right Column: Fare Breakdown Card */}
+                    {booking.bookingStatus !== "CANCELLED" && (
+                        <div className="w-full lg:w-60 xl:w-75 shrink-0">
+                            <Card className="p-5 shadow-md rounded-xl">
+                                <h3 className="text-base font-bold text-gray-900 pb-3 border-b border-gray-100">Fare Summary</h3>
+                                {booking.fare ? (
+                                    <div className="py-3 space-y-3 text-sm">
+                                        <div className="flex justify-between text-gray-600">
+                                            <span>Base Fare ({allPassengers.length} Travellers)</span>
+                                            <span className="font-semibold text-gray-800">₹{booking.fare.baseFare?.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-gray-600">
+                                            <span>Taxes & Fees</span>
+                                            <span className="font-semibold text-gray-800">₹{booking.fare.taxes?.toLocaleString()}</span>
+                                        </div>
+                                        {booking.fare.seatCharges > 0 && (
+                                            <div className="flex justify-between text-gray-600">
+                                                <span>Seat Charges</span>
+                                                <span className="font-semibold text-gray-800">₹{booking.fare.seatCharges?.toLocaleString()}</span>
+                                            </div>
+                                        )}
+                                        {booking.fare.mealCharges > 0 && (
+                                            <div className="flex justify-between text-gray-600">
+                                                <span>Meal Charges</span>
+                                                <span className="font-semibold text-gray-800">₹{booking.fare.mealCharges?.toLocaleString()}</span>
+                                            </div>
+                                        )}
+                                        {booking.fare.baggageCharges > 0 && (
+                                            <div className="flex justify-between text-gray-600">
+                                                <span>Baggage Charges</span>
+                                                <span className="font-semibold text-gray-800">₹{booking.fare.baggageCharges?.toLocaleString()}</span>
+                                            </div>
+                                        )}
+                                        {booking.fare.discount > 0 && (
+                                            <div className="flex justify-between text-green-700 font-medium">
+                                                <span>Discount Applied</span>
+                                                <span>-₹{booking.fare.discount?.toLocaleString()}</span>
+                                            </div>
+                                        )}
+                                        <div className="pt-3 border-t border-dashed border-gray-200 flex justify-between font-bold text-base text-gray-900">
+                                            <span>Total Paid</span>
+                                            <span className="text-amber-600">₹{booking.fare.total?.toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <FareDetails flightInstances={sortedInstances} discountValue={200} seatCharges={200} mealCharges={200} baggageCharges={200} />
+                                )}
+                            </Card>
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -258,15 +317,15 @@ const BookingDetails = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                         <div className="text-sm text-gray-500 font-medium mb-1">Email Us</div>
-                        <div className="font-bold text-gray-800">support@aviation.com</div>
+                        <div className="font-bold text-gray-800">work.akshgupta@gmail.com</div>
                     </div>
                     <div>
                         <div className="text-sm text-gray-500 font-medium mb-1">Contact Us</div>
-                        <div className="font-bold text-gray-800">1800 123 4567</div>
+                        <div className="font-bold text-gray-800">+91 9644538164</div>
                     </div>
                     <div>
                         <div className="text-sm text-gray-500 font-medium mb-1">Airline Contact Information</div>
-                        <div className="font-bold text-gray-800">0124-6173838, 0124-4973838</div>
+                        <div className="font-bold text-gray-800">+91-124-9876543</div>
                     </div>
                 </div>
             </Card>

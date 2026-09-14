@@ -4,7 +4,7 @@ import Logo from "../../assets/images/AviorLogo.png";
 
 export const metadata = {
     title: "Flight | Sky",
-    description: "Flight to Aviation App",
+    description: "Flight to Aviora",
 };
 
 export default function DashboardLayout({

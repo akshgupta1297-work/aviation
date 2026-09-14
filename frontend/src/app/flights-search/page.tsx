@@ -260,7 +260,7 @@ function FlightsSearchContent() {
     return (
         <main className="flex-1 w-full max-w-7xl mx-auto mt-10 px-4 py-6 flex flex-col md:flex-row gap-6">
             {/* Sidebar Filters */}
-            <aside className="w-full md:w-64 flex-shrink-0">
+            <aside className="w-full md:w-64 shrink-0">
                 <FlightSearchSidebar flights={flights} filters={filters} setFilters={setFilters} />
             </aside>
 

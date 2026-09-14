@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     domains: ["localhost"],
     unoptimized: true,
   },
-  allowedDevOrigins: ['192.168.29.173'],
+  // allowedDevOrigins: ['192.168.29.13'],
 };
 
 export default nextConfig;
