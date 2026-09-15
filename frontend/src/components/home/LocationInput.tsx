@@ -54,54 +54,72 @@ export const WithSections = memo(function WithSections({
     onChange,
 }: Props) {
     const [selectedKey, setSelectedKey] = useState<Key | null>(value);
-    const [airportsKey, setAirportsKey] = useState<[Airport] | never[]>();
+    const [airportsKey, setAirportsKey] = useState<Airport[]>([]);
     const { contains } = useFilter({ sensitivity: "base" });
-    console.log(selectedKey);
+
+    const SUGGESTED_CITIES = useMemo(() => ["Indore", "Delhi", "Bengaluru"], []);
 
     const changeVal = (val: Key | null) => {
-        onChange(val as string)
-        setSelectedKey(val)
-    }
+        onChange(val as string);
+        setSelectedKey(val);
+    };
+
+    useEffect(() => {
+        setSelectedKey(value);
+    }, [value]);
+
+    const getAirports = async () => {
+        if (!airportsKey?.length) {
+            const airports = await getAirportsQuery();
+            if (airports && airports.length > 0) {
+                setAirportsKey(airports);
+            }
+        }
+    };
+
+    const getAirportsWithQuery = async (query: string) => {
+        if (query.length >= 3) {
+            const airports = await getAirportsQuery(query);
+            if (airports && airports.length > 0) {
+                setAirportsKey(airports);
+            } else {
+                setAirportsKey([]);
+            }
+        } else if (!query.length) {
+            const airports = await getAirportsQuery();
+            if (airports && airports.length > 0) {
+                setAirportsKey(airports);
+            }
+        }
+    };
 
     const debouncedFetch = useMemo(
         () =>
             debounce((query: string) => {
-                getAirportsWithQuery(query)
+                getAirportsWithQuery(query);
             }, 500),
-        [] // Empty dependency array ensures this function persists across renders
+        []
     );
 
     useEffect(() => {
-        getAirports()
-    }, [])
+        getAirports();
+    }, []);
 
-
-    const getAirports = async () => {
-        if (!airportsKey?.length) {
-            const airports = await getAirportsQuery()
-            if (airports.length > 0) {
-                setAirportsKey(airports)
-            }
-        }
-    }
-    const getAirportsWithQuery = async (query: string) => {
-        if (query.length >= 3) {
-            const airports = await getAirportsQuery(query)
-            if (airports.length > 0) {
-                setAirportsKey(airports)
-            } else {
-                setAirportsKey([])
-            }
-        } else if (!query.length) {
-            const airports = await getAirportsQuery()
-            if (airports.length > 0) {
-                setAirportsKey(airports)
-            }
-        }
-    }
     const handleChange = (value: string) => {
-        debouncedFetch(value);       // Triggers the delayed API execution
+        debouncedFetch(value);
     };
+
+    const suggestedAirports = useMemo(() => {
+        return (airportsKey || []).filter((airport) =>
+            SUGGESTED_CITIES.some((city) => airport.city?.toLowerCase() === city.toLowerCase())
+        );
+    }, [airportsKey, SUGGESTED_CITIES]);
+
+    const otherAirports = useMemo(() => {
+        return (airportsKey || []).filter(
+            (airport) => !SUGGESTED_CITIES.some((city) => airport.city?.toLowerCase() === city.toLowerCase())
+        );
+    }, [airportsKey, SUGGESTED_CITIES]);
 
     return (
         <Autocomplete
@@ -117,7 +135,6 @@ export const WithSections = memo(function WithSections({
                 <Autocomplete.Trigger className={"min-w-39 shadow-none hover:bg-transparent"}>
                     <Autocomplete.Value />
                     <Autocomplete.ClearButton />
-                    {/* <Autocomplete.Indicator /> */}
                 </Autocomplete.Trigger>
                 <Autocomplete.Popover>
                     <Autocomplete.Filter filter={contains}>
@@ -129,11 +146,16 @@ export const WithSections = memo(function WithSections({
                             </SearchField.Group>
                         </SearchField>
                         <ListBox renderEmptyState={() => <EmptyState>No results found</EmptyState>}>
-                            <ListBox.Section>
-                                <Header>Suggested</Header>
-                                {airportsKey?.map((airport) => {
-                                    return (
-                                        <ListBox.Item className="p-0" key={airport.id} id={airport.id} textValue={`${airport.city}, ${airport.airport_name}, ${airport.iata_code}`}>
+                            {suggestedAirports.length > 0 && (
+                                <ListBox.Section>
+                                    <Header>Suggested</Header>
+                                    {suggestedAirports.map((airport) => (
+                                        <ListBox.Item
+                                            className="p-0"
+                                            key={airport.id}
+                                            id={airport.id}
+                                            textValue={`${airport.city}, ${airport.airport_name}, ${airport.iata_code}`}
+                                        >
                                             <div className="flex w-full single-line-trim p-2 justify-between">
                                                 <span className="font-bold search-airport-name">{airport.city}, {airport.country_iso2}</span>
                                                 <span className="font-bold search-airport-name">{airport.iata_code}</span>
@@ -141,13 +163,36 @@ export const WithSections = memo(function WithSections({
                                             </div>
                                             <ListBox.ItemIndicator />
                                         </ListBox.Item>
-                                    )
-                                })}
-                            </ListBox.Section>
+                                    ))}
+                                </ListBox.Section>
+                            )}
+
+                            {suggestedAirports.length > 0 && otherAirports.length > 0 && <Separator />}
+
+                            {otherAirports.length > 0 && (
+                                <ListBox.Section>
+                                    <Header>Airports</Header>
+                                    {otherAirports.map((airport) => (
+                                        <ListBox.Item
+                                            className="p-0"
+                                            key={airport.id}
+                                            id={airport.id}
+                                            textValue={`${airport.city}, ${airport.airport_name}, ${airport.iata_code}`}
+                                        >
+                                            <div className="flex w-full single-line-trim p-2 justify-between">
+                                                <span className="font-bold search-airport-name">{airport.city}, {airport.country_iso2}</span>
+                                                <span className="font-bold search-airport-name">{airport.iata_code}</span>
+                                                <span className="font-bold hidden display-airport-name">{airport.city}, {airport.iata_code} - {airport.airport_name}</span>
+                                            </div>
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+                                    ))}
+                                </ListBox.Section>
+                            )}
                         </ListBox>
                     </Autocomplete.Filter>
                 </Autocomplete.Popover>
             </div>
         </Autocomplete>
     );
-})
+});
